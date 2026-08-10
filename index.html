@@ -1271,6 +1271,18 @@ button {
 @media(max-width:900px){.review-stats{grid-template-columns:repeat(2,1fr)}.reviews-top{align-items:flex-start;flex-direction:column}.reviews-view{padding:22px}.review-form-grid{grid-template-columns:1fr}}
 @media(max-width:520px){.review-stats{grid-template-columns:1fr}.review-controls{flex-direction:column}}
 
+
+.sidebar .nav-icon .icon-line{
+    width:19px;
+    height:19px;
+    display:block;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:1.8;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
 </style>
 </head>
 
@@ -1293,36 +1305,36 @@ button {
         <div class="nav-label">WORKSPACE</div>
 
         <button class="nav-item active" data-filter="all">
-            <span class="nav-icon">⌂</span>
+            <span class="nav-icon"><svg class="icon-line" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg></span>
             Dashboard
         </button>
 
         <button class="nav-item" data-filter="ready">
-            <span class="nav-icon">✈</span>
+            <span class="nav-icon"><svg class="icon-line" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></span>
             Ready to Escalate
             <span class="nav-count count-ready" id="readyNavCount">0</span>
         </button>
 
         <button class="nav-item" data-filter="waiting">
-            <span class="nav-icon">◌</span>
+            <span class="nav-icon"><svg class="icon-line" viewBox="0 0 24 24"><path d="M21 11.5a8 8 0 0 1-8.5 8A8.7 8.7 0 0 1 8 18.3L3 20l1.7-4.6A8 8 0 1 1 21 11.5Z"/><path d="M9 11h.01M12 11h.01M15 11h.01"/></svg></span>
             Waiting for User
             <span class="nav-count count-waiting" id="waitingNavCount">0</span>
         </button>
 
         <button class="nav-item" data-filter="pending">
-            <span class="nav-icon">◷</span>
+            <span class="nav-icon"><svg class="icon-line" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
             Pending Escalation
             <span class="nav-count count-pending" id="pendingNavCount">0</span>
         </button>
 
         <button class="nav-item" data-filter="escalated">
-            <span class="nav-icon">✓</span>
+            <span class="nav-icon"><svg class="icon-line" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></svg></span>
             Escalated
             <span class="nav-count count-escalated" id="escalatedNavCount">0</span>
         </button>
 
         <button class="nav-item" data-filter="archived">
-            <span class="nav-icon">□</span>
+            <span class="nav-icon"><svg class="icon-line" viewBox="0 0 24 24"><path d="M4 7h16v13H4z"/><path d="M3 4h18v3H3z"/><path d="M10 12h4"/></svg></span>
             Archived
         </button>
 
@@ -1330,22 +1342,6 @@ button {
             <span class="nav-icon"><svg class="icon-line" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg></span>
             Reviews Tracker
             <span class="nav-count count-ready" id="reviewsNavCount">0</span>
-        </button>
-
-    </div>
-
-    <div class="nav-section">
-
-        <div class="nav-label">TOOLS</div>
-
-        <button class="nav-item" id="quickAddBtn">
-            <span class="nav-icon">＋</span>
-            New Escalation
-        </button>
-
-        <button class="nav-item" id="clearFilterBtn">
-            <span class="nav-icon">⌕</span>
-            Clear Filters
         </button>
 
     </div>
