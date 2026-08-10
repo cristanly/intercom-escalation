@@ -1373,7 +1373,6 @@ button {
         </div>
 
         <div class="top-actions">
-            <button class="icon-btn" id="themeBtn">☾</button>
             <button class="add-btn" id="openModalBtn">
                 ＋ Add New Escalation
             </button>
@@ -2040,7 +2039,8 @@ function closeModal() {
 }
 
 document.getElementById("openModalBtn").addEventListener("click", openNewCase);
-document.getElementById("quickAddBtn").addEventListener("click", openNewCase);
+const quickAddBtn = document.getElementById("quickAddBtn");
+if (quickAddBtn) quickAddBtn.addEventListener("click", openNewCase);
 document.getElementById("closeModalBtn").addEventListener("click", closeModal);
 document.getElementById("cancelModalBtn").addEventListener("click", closeModal);
 
@@ -2310,54 +2310,7 @@ statusFilter.addEventListener("change", () => {
 searchInput.addEventListener("input", renderCases);
 sortFilter.addEventListener("change", renderCases);
 
-document.getElementById("clearFilterBtn")
-.addEventListener("click", () => {
 
-    currentFilter = "all";
-    statusFilter.value = "all";
-    searchInput.value = "";
-    sortFilter.value = "newest";
-
-    document.querySelectorAll(".nav-item[data-filter]")
-        .forEach(btn => {
-
-            btn.classList.toggle(
-                "active",
-                btn.dataset.filter === "all"
-            );
-
-        });
-
-    renderCases();
-});
-
-/* THEME */
-
-document.getElementById("themeBtn")
-.addEventListener("click", () => {
-
-    document.body.classList.toggle("extra-glow");
-
-    if (document.body.classList.contains("extra-glow")) {
-
-        document.body.style.background = `
-            radial-gradient(circle at 15% 0%, rgba(209,140,255,.2), transparent 30%),
-            radial-gradient(circle at 90% 20%, rgba(104,221,255,.15), transparent 30%),
-            radial-gradient(circle at 50% 100%, rgba(255,135,215,.08), transparent 35%),
-            #080a12
-        `;
-
-        showToast("Extra glow activated ✨");
-
-    } else {
-
-        document.body.style.background = `
-            radial-gradient(circle at 15% 0%, rgba(120,77,255,.12), transparent 28%),
-            radial-gradient(circle at 90% 20%, rgba(0,204,255,.08), transparent 25%),
-            #080a12
-        `;
-    }
-});
 
 /* TOAST */
 
