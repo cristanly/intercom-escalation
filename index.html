@@ -263,7 +263,7 @@ button {
     position: absolute;
     right: 0;
     top: calc(100% + 8px);
-    width: 170px;
+    width: 190px;
     background: #121627;
     border: 1px solid var(--border);
     border-radius: 14px;
@@ -1219,6 +1219,16 @@ button {
     stroke-linecap:round;
     stroke-linejoin:round;
 }
+
+/* PRINT PREVIEW PREPARATION FOR PDF EXTRACTION */
+@media print {
+    body { background: #fff !important; color: #000 !important; }
+    .sidebar, .topbar, .filter-bar, .card-actions, .gear-dropdown-wrap, #addCaseBtn, #addReviewBtn, .review-controls, .review-actions { display: none !important; }
+    .main { padding: 0 !important; }
+    .case-card { page-break-inside: avoid; border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; box-shadow: none !important; margin-bottom: 15px; }
+    .review-table-wrap { border: 1px solid #ccc !important; }
+    .review-table th, .review-table td { color: #000 !important; border-bottom: 1px solid #ccc !important; }
+}
 </style>
 </head>
 
@@ -1325,7 +1335,7 @@ button {
         <div class="top-actions">
             <button class="add-btn" id="addCaseBtn">+ New Case</button>
 
-            <!-- GEAR DROPDOWN FOR IMPORT / EXPORT -->
+            <!-- GEAR DROPDOWN FOR MULTIPLE FORMAT EXPORTS / IMPORT -->
             <div class="gear-dropdown-wrap">
                 <button class="gear-btn" id="gearBtn" title="Settings / Data Options">
                     <svg class="icon-line" viewBox="0 0 24 24" style="width: 20px; height: 20px;">
@@ -1336,11 +1346,19 @@ button {
                 <div class="gear-menu" id="gearMenu">
                     <button class="gear-menu-item" id="exportBtn">
                         <svg class="icon-line" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                        Export Data
+                        Export JSON File
+                    </button>
+                    <button class="gear-menu-item" id="exportExcelBtn">
+                        <svg class="icon-line" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+                        Export Excel (CSV)
+                    </button>
+                    <button class="gear-menu-item" id="exportPdfBtn">
+                        <svg class="icon-line" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        Export PDF Layout
                     </button>
                     <button class="gear-menu-item" id="importBtn">
                         <svg class="icon-line" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Import Data
+                        Import JSON Setup
                     </button>
                 </div>
             </div>
@@ -1765,6 +1783,8 @@ const reviewStatusFilter = document.getElementById('reviewStatusFilter');
 const gearBtn = document.getElementById('gearBtn');
 const gearMenu = document.getElementById('gearMenu');
 const exportBtn = document.getElementById('exportBtn');
+const exportExcelBtn = document.getElementById('exportExcelBtn');
+const exportPdfBtn = document.getElementById('exportPdfBtn');
 const importBtn = document.getElementById('importBtn');
 const importFileInput = document.getElementById('importFileInput');
 
@@ -1796,7 +1816,7 @@ function showToast(msg) {
     setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// --- GEAR DROPDOWN & IMPORT / EXPORT ---
+// --- GEAR DROPDOWN & IMPORT / EXPORT FORMAT INTEGRATIONS ---
 function setupGearDropdown() {
     gearBtn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -1807,7 +1827,7 @@ function setupGearDropdown() {
         gearMenu.classList.remove('show');
     });
 
-    // EXPORT
+    // 1. ORIGINAL EXPORT (JSON FORMAT SETUP)
     exportBtn.addEventListener('click', () => {
         const backupData = {
             cases: cases,
@@ -1823,10 +1843,60 @@ function setupGearDropdown() {
         a.download = `escalation_backup_${new Date().toISOString().split('T')[0]}.json`;
         a.click();
         URL.revokeObjectURL(url);
-        showToast('Data exported successfully!');
+        showToast('JSON Data exported successfully!');
     });
 
-    // IMPORT
+    // 2. EXCEL (CSV) FORMAT EXPORT PREPARATION
+    exportExcelBtn.addEventListener('click', () => {
+        let csvContent = "";
+        let filename = "";
+
+        if (currentMode === 'reviews') {
+            // Setup columns for reviews tracker workspace data table
+            const headers = ["Date", "Platform", "User Name", "Intercom Link", "Status", "Bonus"];
+            const rows = reviews.map(r => [
+                r.revDate || '',
+                `"${(r.platform || '').replace(/"/g, '""')}"`,
+                `"${(r.userName || '').replace(/"/g, '""')}"`,
+                `"${(r.link || '').replace(/"/g, '""')}"`,
+                r.status || '',
+                (parseFloat(r.bonus) || 0).toFixed(2)
+            ]);
+            csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+            filename = `reviews_report_${new Date().toISOString().split('T')[0]}.csv`;
+        } else {
+            // Setup columns for main escalation cases data grid
+            const headers = ["Date", "User Email", "User Ticket ID", "Row Number", "Provider", "Issue Category", "Status", "Notes"];
+            const rows = cases.map(c => [
+                c.caseDate || '',
+                `"${(c.userEmail || '').replace(/"/g, '""')}"`,
+                `"${(c.userId || '').replace(/"/g, '""')}"`,
+                `"${(c.rowNum || '').replace(/"/g, '""')}"`,
+                `"${(c.provider || '').replace(/"/g, '""')}"`,
+                `"${(c.issueCategory || '').replace(/"/g, '""')}"`,
+                c.status || '',
+                `"${(c.notes || '').replace(/"/g, '""')}"`
+            ]);
+            csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+            filename = `escalation_cases_${new Date().toISOString().split('T')[0]}.csv`;
+        }
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('Excel CSV exported successfully!');
+    });
+
+    // 3. PRINT DISPATCH MECHANISM (PDF EXPORT LAYOUT VIA WINDOW.PRINT)
+    exportPdfBtn.addEventListener('click', () => {
+        window.print();
+    });
+
+    // IMPORT SETUP DISPATCHER
     importBtn.addEventListener('click', () => {
         importFileInput.click();
     });
@@ -1850,6 +1920,7 @@ function setupGearDropdown() {
                     saveCases();
                     saveReviews();
                     renderApp();
+                    renderReviews();
                     showToast('Data imported successfully!');
                 } else {
                     alert('Invalid import file structure.');
