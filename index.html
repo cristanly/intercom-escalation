@@ -1253,6 +1253,24 @@ button {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* REVIEWS TRACKER */
+.icon-line{width:18px;height:18px;display:inline-block;vertical-align:middle;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.nav-item.review-nav{color:#d9b6ff}
+.review-nav .nav-icon{display:flex;align-items:center}
+.main.review-mode > *:not(.reviews-view){display:none!important}
+.reviews-view{display:none;padding:34px;max-width:1500px;margin:0 auto;width:100%}
+.main.review-mode .reviews-view{display:block}
+.reviews-top{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:28px}
+.reviews-title-wrap h2{font-size:30px;margin:0 0 7px;font-family:"Space Grotesk",sans-serif}.reviews-title-wrap p{margin:0;color:var(--muted)}
+.review-add-btn{display:flex;align-items:center;gap:9px;border:1px solid rgba(104,221,255,.38);background:linear-gradient(135deg,rgba(104,221,255,.16),rgba(209,140,255,.14));color:#fff;border-radius:13px;padding:12px 17px;font-weight:800;cursor:pointer;box-shadow:0 0 22px rgba(104,221,255,.08)}
+.review-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:22px}.review-stat{padding:20px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.015));box-shadow:0 12px 30px rgba(0,0,0,.12)}.review-stat small{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.9px;margin-bottom:10px}.review-stat strong{font-size:27px;font-family:"Space Grotesk",sans-serif}.review-stat .stat-icon{float:right;color:#9cecff}
+.review-controls{display:flex;gap:12px;margin-bottom:20px}.review-search{flex:1;min-width:0}.review-empty{padding:55px 20px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:18px}.review-table-wrap{border:1px solid var(--border);border-radius:18px;overflow:auto;background:rgba(255,255,255,.018)}.review-table{width:100%;border-collapse:collapse;min-width:760px}.review-table th,.review-table td{padding:15px 16px;text-align:left;border-bottom:1px solid var(--border)}.review-table th{font-size:10px;letter-spacing:1px;color:var(--muted);text-transform:uppercase}.review-link{display:inline-flex;align-items:center;gap:7px;color:#9cecff;text-decoration:none;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.review-status{display:inline-flex;padding:7px 10px;border-radius:999px;font-size:11px;font-weight:800}.review-status.pending{background:rgba(255,205,107,.13);color:#ffd56a}.review-status.successful{background:rgba(109,240,174,.12);color:#73eab0}.review-status.not-reviewed{background:rgba(255,133,158,.12);color:#ff9ab0}.review-bonus{font-weight:800;color:#73eab0}.review-actions{display:flex;gap:8px}.review-action{width:35px;height:35px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.035);color:var(--muted);display:grid;place-items:center;cursor:pointer}.review-action:hover{color:#fff;border-color:#9cecff}.review-action.delete:hover{border-color:#ff7893;color:#ff9ab0}
+.review-modal{position:fixed;inset:0;z-index:450;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,3,8,.76);backdrop-filter:blur(9px)}.review-modal.show{display:flex}.review-modal-card{width:min(560px,100%);padding:25px;border-radius:22px;background:#101421;border:1px solid rgba(104,221,255,.24);box-shadow:0 25px 90px rgba(0,0,0,.55)}.review-modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.review-modal-head h3{margin:0;font-size:23px}.review-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.review-form-grid .full{grid-column:1/-1}.review-form-group{display:flex;flex-direction:column;gap:8px}.review-form-group label{font-size:10px;letter-spacing:.8px;color:var(--muted);font-weight:800}.review-form-group input,.review-form-group select{height:46px;padding:0 13px;border-radius:11px;border:1px solid var(--border);background:#0a0d18;color:#fff;outline:none}.review-form-group input:focus,.review-form-group select:focus{border-color:#9cecff}.review-modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
+@media(max-width:900px){.review-stats{grid-template-columns:repeat(2,1fr)}.reviews-top{align-items:flex-start;flex-direction:column}.reviews-view{padding:22px}.review-form-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.review-stats{grid-template-columns:1fr}.review-controls{flex-direction:column}}
+
 </style>
 </head>
 
@@ -1311,6 +1329,12 @@ button {
         <button class="nav-item" data-filter="archived">
             <span class="nav-icon">□</span>
             Archived
+        </button>
+
+        <button class="nav-item review-nav" id="reviewsNavBtn" type="button">
+            <span class="nav-icon"><svg class="icon-line" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg></span>
+            Reviews Tracker
+            <span class="nav-count count-ready" id="reviewsNavCount">0</span>
         </button>
 
     </div>
@@ -1437,6 +1461,22 @@ button {
     </div>
 
     <section class="cases-grid" id="casesGrid"></section>
+
+
+    <section class="reviews-view" id="reviewsView">
+        <div class="reviews-top">
+            <div class="reviews-title-wrap"><h2>Reviews Tracker</h2><p>Track review opportunities and your successful $40 bonuses.</p></div>
+            <button class="review-add-btn" id="openReviewModalBtn" type="button"><svg class="icon-line" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add Review</button>
+        </div>
+        <div class="review-stats">
+            <div class="review-stat"><span class="stat-icon"><svg class="icon-line" viewBox="0 0 24 24"><path d="M7 3h10l2 3v15H5V6l2-3Z"/><path d="M9 10h6M9 14h6"/></svg></span><small>Total Conversations</small><strong id="reviewTotalCount">0</strong></div>
+            <div class="review-stat"><span class="stat-icon"><svg class="icon-line" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><small>Pending</small><strong id="reviewPendingCount">0</strong></div>
+            <div class="review-stat"><span class="stat-icon"><svg class="icon-line" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span><small>Successful</small><strong id="reviewSuccessCount">0</strong></div>
+            <div class="review-stat"><span class="stat-icon"><svg class="icon-line" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M14.5 8.5c-.5-.7-1.4-1.1-2.5-1.1-1.5 0-2.5.8-2.5 1.9 0 1.2 1 1.7 2.6 2.1 1.5.4 2.5.9 2.5 2.1 0 1.1-1 2-2.7 2-1.1 0-2.1-.4-2.8-1.2M12 5.5v13"/></svg></span><small>Total Bonus Earned</small><strong id="reviewBonusTotal">$0</strong></div>
+        </div>
+        <div class="review-controls"><div class="search-box review-search"><span>⌕</span><input id="reviewSearchInput" type="text" placeholder="Search username or conversation link..."></div><select class="filter-select" id="reviewStatusFilter"><option value="all">All Status</option><option value="pending">Pending</option><option value="successful">Successful</option><option value="not-reviewed">Not Reviewed</option></select></div>
+        <div class="review-table-wrap"><table class="review-table"><thead><tr><th>Customer</th><th>Intercom Conversation</th><th>Review Date</th><th>Status</th><th>Bonus</th><th>Actions</th></tr></thead><tbody id="reviewsTableBody"></tbody></table><div class="review-empty" id="reviewsEmpty">No review entries yet. Add your first conversation and start tracking that $40. 💸</div></div>
+    </section>
 
 </main>
 </div>
@@ -1600,6 +1640,9 @@ button {
     </div>
 
 </div>
+
+
+<div class="review-modal" id="reviewModal"><div class="review-modal-card"><div class="review-modal-head"><div><span class="name-modal-label">REVIEW ENTRY</span><h3 id="reviewModalTitle">Add Review</h3></div><button class="close-name-btn" id="closeReviewModalBtn" type="button">✕</button></div><form id="reviewForm"><input type="hidden" id="reviewId"><div class="review-form-grid"><div class="review-form-group"><label>USERNAME / CUSTOMER</label><input id="reviewUsername" type="text" placeholder="Optional"></div><div class="review-form-group"><label>REVIEW DATE</label><input id="reviewDate" type="date"></div><div class="review-form-group"><label>STATUS</label><select id="reviewStatus"><option value="pending">Pending</option><option value="successful">Successful Review</option><option value="not-reviewed">Not Reviewed</option></select></div><div class="review-form-group full"><label>INTERCOM CONVERSATION LINK *</label><input id="reviewLink" type="url" required placeholder="Paste the conversation link here..."></div></div><div class="review-modal-actions"><button class="cancel-name-btn" id="cancelReviewBtn" type="button">Cancel</button><button class="save-name-btn" type="submit">Save Review</button></div></form></div></div>
 
 <div class="toast" id="toast"></div>
 
@@ -2417,6 +2460,41 @@ nameInput.addEventListener("keydown", e => {
         closeNameModal();
     }
 });
+
+
+
+/* REVIEWS TRACKER */
+let reviews = JSON.parse(localStorage.getItem("reviewTrackerEntries")) || [];
+const BONUS_PER_SUCCESS = 40;
+const reviewsNavBtn = document.getElementById("reviewsNavBtn");
+const reviewsView = document.getElementById("reviewsView");
+const reviewModal = document.getElementById("reviewModal");
+const reviewForm = document.getElementById("reviewForm");
+const reviewSearchInput = document.getElementById("reviewSearchInput");
+const reviewStatusFilter = document.getElementById("reviewStatusFilter");
+const reviewsTableBody = document.getElementById("reviewsTableBody");
+const reviewsEmpty = document.getElementById("reviewsEmpty");
+function saveReviews(){localStorage.setItem("reviewTrackerEntries",JSON.stringify(reviews));}
+function reviewLabel(s){return s==="successful"?"Successful":s==="not-reviewed"?"Not Reviewed":"Pending";}
+function formatReviewDate(value){if(!value)return "—";const d=new Date(value+"T00:00:00");return d.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});}
+function todayReviewDate(){return new Date().toISOString().slice(0,10);}
+function renderReviews(){
+ const q=(reviewSearchInput.value||"").toLowerCase().trim(), f=reviewStatusFilter.value;
+ const filtered=reviews.filter(r=>(f==="all"||r.status===f)&&(`${r.username||""} ${r.link||""}`).toLowerCase().includes(q));
+ const pending=reviews.filter(r=>r.status==="pending").length, success=reviews.filter(r=>r.status==="successful").length;
+ document.getElementById("reviewTotalCount").textContent=reviews.length; document.getElementById("reviewPendingCount").textContent=pending; document.getElementById("reviewSuccessCount").textContent=success; document.getElementById("reviewBonusTotal").textContent=`$${success*BONUS_PER_SUCCESS}`; document.getElementById("reviewsNavCount").textContent=pending;
+ reviewsTableBody.innerHTML=filtered.map(r=>`<tr><td>${escapeHTML(r.username||"—")}</td><td><a class="review-link" href="${escapeHTML(r.link)}" target="_blank" rel="noopener"><svg class="icon-line" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"/></svg>Open conversation</a></td><td>${formatReviewDate(r.reviewDate || new Date(r.createdAt).toISOString().slice(0,10))}</td><td><span class="review-status ${r.status}">${reviewLabel(r.status)}</span></td><td class="review-bonus">${r.status==="successful"?"+$40":"—"}</td><td><div class="review-actions"><button class="review-action" onclick="editReview('${r.id}')" title="Edit"><svg class="icon-line" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg></button><button class="review-action delete" onclick="deleteReview('${r.id}')" title="Delete"><svg class="icon-line" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3"/></svg></button></div></td></tr>`).join("");
+ reviewsEmpty.style.display=filtered.length?"none":"block";
+}
+function openReviewModal(item=null){reviewForm.reset();document.getElementById("reviewId").value=item?.id||"";document.getElementById("reviewUsername").value=item?.username||"";document.getElementById("reviewLink").value=item?.link||"";document.getElementById("reviewDate").value=item?.reviewDate||todayReviewDate();document.getElementById("reviewStatus").value=item?.status||"pending";document.getElementById("reviewModalTitle").textContent=item?"Edit Review":"Add Review";reviewModal.classList.add("show");}
+function closeReviewModal(){reviewModal.classList.remove("show");}
+window.editReview=id=>{const r=reviews.find(x=>x.id===id);if(r)openReviewModal(r);};
+window.deleteReview=id=>{if(confirm("Delete this review entry?")){reviews=reviews.filter(r=>r.id!==id);saveReviews();renderReviews();showToast("Review entry deleted.");}};
+reviewsNavBtn.addEventListener("click",()=>{document.querySelector(".main").classList.add("review-mode");document.querySelectorAll(".nav-item.active").forEach(x=>x.classList.remove("active"));reviewsNavBtn.classList.add("active");renderReviews();});
+document.querySelectorAll(".nav-item[data-filter]").forEach(btn=>btn.addEventListener("click",()=>document.querySelector(".main").classList.remove("review-mode")));
+document.getElementById("openReviewModalBtn").addEventListener("click",()=>openReviewModal());document.getElementById("closeReviewModalBtn").addEventListener("click",closeReviewModal);document.getElementById("cancelReviewBtn").addEventListener("click",closeReviewModal);reviewModal.addEventListener("click",e=>{if(e.target===reviewModal)closeReviewModal();});
+reviewForm.addEventListener("submit",e=>{e.preventDefault();const id=document.getElementById("reviewId").value;const data={username:document.getElementById("reviewUsername").value.trim(),link:document.getElementById("reviewLink").value.trim(),reviewDate:document.getElementById("reviewDate").value||todayReviewDate(),status:document.getElementById("reviewStatus").value};if(id){const r=reviews.find(x=>x.id===id);Object.assign(r,data);}else reviews.unshift({id:crypto.randomUUID(),createdAt:Date.now(),...data});saveReviews();closeReviewModal();renderReviews();showToast(id?"Review updated.":"Review added.");});
+reviewSearchInput.addEventListener("input",renderReviews);reviewStatusFilter.addEventListener("change",renderReviews);renderReviews();
 
 /* INIT */
 
