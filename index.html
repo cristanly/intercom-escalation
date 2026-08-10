@@ -234,6 +234,71 @@ button {
     box-shadow: 0 0 30px var(--purple-glow);
 }
 
+/* GEAR / SETTINGS DROPDOWN */
+.gear-dropdown-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.gear-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .2s ease;
+}
+
+.gear-btn:hover {
+    background: var(--panel-light);
+    border-color: rgba(255,255,255,.2);
+    color: var(--purple);
+}
+
+.gear-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    width: 170px;
+    background: #121627;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 6px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 50;
+}
+
+.gear-menu.show {
+    display: flex;
+}
+
+.gear-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 13px;
+    border-radius: 8px;
+    text-align: left;
+    transition: .15s;
+}
+
+.gear-menu-item:hover {
+    background: rgba(255,255,255,.06);
+    color: var(--cyan);
+}
+
 /* STATS */
 
 .stats {
@@ -1259,6 +1324,28 @@ button {
 
         <div class="top-actions">
             <button class="add-btn" id="addCaseBtn">+ New Case</button>
+
+            <!-- GEAR DROPDOWN FOR IMPORT / EXPORT -->
+            <div class="gear-dropdown-wrap">
+                <button class="gear-btn" id="gearBtn" title="Settings / Data Options">
+                    <svg class="icon-line" viewBox="0 0 24 24" style="width: 20px; height: 20px;">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </button>
+                <div class="gear-menu" id="gearMenu">
+                    <button class="gear-menu-item" id="exportBtn">
+                        <svg class="icon-line" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        Export Data
+                    </button>
+                    <button class="gear-menu-item" id="importBtn">
+                        <svg class="icon-line" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Import Data
+                    </button>
+                </div>
+            </div>
+            <!-- HIDDEN FILE INPUT FOR IMPORT -->
+            <input type="file" id="importFileInput" accept=".json" style="display: none;">
         </div>
     </header>
 
@@ -1675,6 +1762,12 @@ const reviewTableBody = document.getElementById('reviewTableBody');
 const reviewSearchInput = document.getElementById('reviewSearchInput');
 const reviewStatusFilter = document.getElementById('reviewStatusFilter');
 
+const gearBtn = document.getElementById('gearBtn');
+const gearMenu = document.getElementById('gearMenu');
+const exportBtn = document.getElementById('exportBtn');
+const importBtn = document.getElementById('importBtn');
+const importFileInput = document.getElementById('importFileInput');
+
 const toast = document.getElementById('toast');
 
 // --- APP INIT ---
@@ -1685,6 +1778,7 @@ function init() {
     setupNavigation();
     setupFileUpload();
     setupProviderToggle();
+    setupGearDropdown();
     renderApp();
 }
 
@@ -1700,6 +1794,73 @@ function showToast(msg) {
     toast.textContent = msg;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// --- GEAR DROPDOWN & IMPORT / EXPORT ---
+function setupGearDropdown() {
+    gearBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        gearMenu.classList.toggle('show');
+    });
+
+    document.addEventListener('click', () => {
+        gearMenu.classList.remove('show');
+    });
+
+    // EXPORT
+    exportBtn.addEventListener('click', () => {
+        const backupData = {
+            cases: cases,
+            reviews: reviews,
+            userName: localStorage.getItem('escalation_user_name') || 'Buddy',
+            exportedAt: new Date().toISOString()
+        };
+
+        const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `escalation_backup_${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('Data exported successfully!');
+    });
+
+    // IMPORT
+    importBtn.addEventListener('click', () => {
+        importFileInput.click();
+    });
+
+    importFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const data = JSON.parse(event.target.result);
+                if (data.cases || data.reviews) {
+                    if (data.cases) cases = data.cases;
+                    if (data.reviews) reviews = data.reviews;
+                    if (data.userName) {
+                        localStorage.setItem('escalation_user_name', data.userName);
+                        displayName.textContent = data.userName;
+                    }
+
+                    saveCases();
+                    saveReviews();
+                    renderApp();
+                    showToast('Data imported successfully!');
+                } else {
+                    alert('Invalid import file structure.');
+                }
+            } catch (err) {
+                alert('Error parsing backup JSON file.');
+            }
+        };
+        reader.readAsText(file);
+        importFileInput.value = '';
+    });
 }
 
 // --- PROVIDER TOGGLE FOR OTHERS ---
