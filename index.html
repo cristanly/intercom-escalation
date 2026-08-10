@@ -13,9 +13,7 @@
 <style>
 :root {
     --bg: #080a12;
-    --bg-2: #0d1020;
     --panel: rgba(18, 22, 39, 0.82);
-    --panel-solid: #121625;
     --panel-light: #181d31;
     --text: #f5f7ff;
     --muted: #8990aa;
@@ -28,17 +26,9 @@
     --cyan-glow: rgba(104,221,255,.3);
 
     --yellow: #ffe26d;
-    --yellow-glow: rgba(255,226,109,.28);
-
     --orange: #ff9d70;
-    --orange-glow: rgba(255,157,112,.28);
-
     --green: #69f0c1;
-    --green-glow: rgba(105,240,193,.25);
-
     --pink: #ff87d7;
-    --pink-glow: rgba(255,135,215,.28);
-
     --red: #ff7f96;
 }
 
@@ -49,8 +39,8 @@
 body {
     margin: 0;
     background:
-        radial-gradient(circle at 15% 0%, rgba(120, 77, 255, .12), transparent 28%),
-        radial-gradient(circle at 90% 20%, rgba(0, 204, 255, .08), transparent 25%),
+        radial-gradient(circle at 15% 0%, rgba(120,77,255,.12), transparent 28%),
+        radial-gradient(circle at 90% 20%, rgba(0,204,255,.08), transparent 25%),
         var(--bg);
     color: var(--text);
     font-family: "DM Sans", sans-serif;
@@ -78,7 +68,7 @@ button {
 .sidebar {
     width: 260px;
     min-height: 100vh;
-    background: rgba(8, 10, 18, .78);
+    background: rgba(8,10,18,.78);
     border-right: 1px solid var(--border);
     padding: 24px 16px;
     position: sticky;
@@ -493,13 +483,6 @@ button {
     box-shadow: inset 0 1px 0 rgba(105,240,193,.35);
 }
 
-.card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-}
-
 .status-label {
     font-size: 11px;
     font-weight: 800;
@@ -524,6 +507,13 @@ button {
 
 .status-archived .status-label {
     color: var(--muted);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
 }
 
 .case-age {
@@ -597,35 +587,38 @@ button {
     white-space: nowrap;
 }
 
+/* BIGGER CHECKLIST */
+
 .checklist-header {
     display: flex;
     justify-content: space-between;
-    margin: 16px 0 10px;
+    margin: 18px 0 13px;
 }
 
 .checklist-header strong {
-    font-size: 11px;
-    letter-spacing: .5px;
+    font-size: 13px;
+    letter-spacing: .6px;
 }
 
 .progress-text {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--cyan);
 }
 
 .mini-checklist {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: 10px;
 }
 
 .mini-check {
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 9px;
     color: var(--muted);
-    font-size: 10px;
+    font-size: 12px;
     min-width: 0;
+    line-height: 1.4;
 }
 
 .mini-check.done {
@@ -633,14 +626,14 @@ button {
 }
 
 .mini-box {
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
     border: 1px solid #4c546b;
-    border-radius: 4px;
+    border-radius: 5px;
     flex: none;
     display: grid;
     place-items: center;
-    font-size: 9px;
+    font-size: 11px;
 }
 
 .mini-check.done .mini-box {
@@ -650,13 +643,13 @@ button {
 }
 
 .evidence-section {
-    margin-top: 17px;
+    margin-top: 18px;
     border-top: 1px solid var(--border);
     padding-top: 15px;
 }
 
 .evidence-title {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     color: var(--muted);
     letter-spacing: .6px;
@@ -737,7 +730,19 @@ button {
     color: var(--green);
 }
 
-/* EMPTY */
+.delete-btn {
+    flex: 0 0 44px;
+    color: var(--red);
+    border-color: rgba(255,127,150,.3);
+}
+
+.delete-btn:hover {
+    background: rgba(255,127,150,.12);
+    border-color: var(--red);
+    box-shadow: 0 0 18px rgba(255,127,150,.15);
+}
+
+/* EMPTY STATE */
 
 .empty-state {
     grid-column: 1 / -1;
@@ -751,7 +756,7 @@ button {
     padding: 30px;
 }
 
-.empty-state .empty-icon {
+.empty-icon {
     font-size: 42px;
     margin-bottom: 10px;
 }
@@ -859,7 +864,7 @@ button {
 
 .modal-section-title {
     margin: 25px 0 12px;
-    font-size: 13px;
+    font-size: 15px;
     color: var(--text);
 }
 
@@ -870,18 +875,20 @@ button {
 }
 
 .check-row {
-    padding: 11px;
+    padding: 12px;
     border: 1px solid var(--border);
     border-radius: 10px;
     display: flex;
-    gap: 9px;
+    gap: 10px;
     align-items: center;
     color: var(--muted);
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .check-row input {
     accent-color: #69f0c1;
+    width: 17px;
+    height: 17px;
 }
 
 .upload-area {
@@ -1024,11 +1031,6 @@ button {
         align-items: flex-start;
     }
 
-    .top-actions {
-        flex-wrap: wrap;
-        justify-content: flex-end;
-    }
-
     .stats {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -1045,7 +1047,6 @@ button {
 
     .top-actions {
         width: 100%;
-        justify-content: space-between;
     }
 
     .add-btn {
@@ -1066,10 +1067,7 @@ button {
 
     .case-info,
     .form-grid,
-    .checklist-editor {
-        grid-template-columns: 1fr;
-    }
-
+    .checklist-editor,
     .mini-checklist {
         grid-template-columns: 1fr;
     }
@@ -1081,168 +1079,171 @@ button {
 
 <div class="app">
 
-    <aside class="sidebar">
+<aside class="sidebar">
 
-        <div class="brand">
-            <div class="brand-icon">!</div>
-            <div>
-                <h1>ESCALATION</h1>
-                <span>TRACKER</span>
-            </div>
+    <div class="brand">
+        <div class="brand-icon">!</div>
+        <div>
+            <h1>ESCALATION</h1>
+            <span>TRACKER</span>
+        </div>
+    </div>
+
+    <div class="nav-section">
+
+        <div class="nav-label">WORKSPACE</div>
+
+        <button class="nav-item active" data-filter="all">
+            <span class="nav-icon">⌂</span>
+            Dashboard
+        </button>
+
+        <button class="nav-item" data-filter="all">
+            <span class="nav-icon">▣</span>
+            All Escalations
+        </button>
+
+        <button class="nav-item" data-filter="ready">
+            <span class="nav-icon">✈</span>
+            Ready to Escalate
+            <span class="nav-count count-ready" id="readyNavCount">0</span>
+        </button>
+
+        <button class="nav-item" data-filter="waiting">
+            <span class="nav-icon">◌</span>
+            Waiting for User
+            <span class="nav-count count-waiting" id="waitingNavCount">0</span>
+        </button>
+
+        <button class="nav-item" data-filter="pending">
+            <span class="nav-icon">◷</span>
+            Pending Escalation
+            <span class="nav-count count-pending" id="pendingNavCount">0</span>
+        </button>
+
+        <button class="nav-item" data-filter="escalated">
+            <span class="nav-icon">✓</span>
+            Escalated
+            <span class="nav-count count-escalated" id="escalatedNavCount">0</span>
+        </button>
+
+        <button class="nav-item" data-filter="archived">
+            <span class="nav-icon">□</span>
+            Archived
+        </button>
+
+    </div>
+
+    <div class="nav-section">
+
+        <div class="nav-label">TOOLS</div>
+
+        <button class="nav-item" id="quickAddBtn">
+            <span class="nav-icon">＋</span>
+            New Escalation
+        </button>
+
+        <button class="nav-item" id="clearFilterBtn">
+            <span class="nav-icon">⌕</span>
+            Clear Filters
+        </button>
+
+    </div>
+
+    <div class="sidebar-bottom">
+        <div class="motivation">
+            <strong>Good work today!</strong>
+            <p>Keep your cases organized. No escalation left behind. ✨</p>
+        </div>
+    </div>
+
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+
+        <div class="greeting">
+            <h2>Hello, Cris! 👋</h2>
+            <p>Stay organized and never miss an escalation.</p>
         </div>
 
-        <div class="nav-section">
-            <div class="nav-label">WORKSPACE</div>
-
-            <button class="nav-item active" data-filter="all">
-                <span class="nav-icon">⌂</span>
-                Dashboard
-            </button>
-
-            <button class="nav-item" data-filter="all">
-                <span class="nav-icon">▣</span>
-                All Escalations
-            </button>
-
-            <button class="nav-item" data-filter="ready">
-                <span class="nav-icon">✈</span>
-                Ready to Escalate
-                <span class="nav-count count-ready" id="readyNavCount">0</span>
-            </button>
-
-            <button class="nav-item" data-filter="waiting">
-                <span class="nav-icon">◌</span>
-                Waiting for User
-                <span class="nav-count count-waiting" id="waitingNavCount">0</span>
-            </button>
-
-            <button class="nav-item" data-filter="pending">
-                <span class="nav-icon">◷</span>
-                Pending Escalation
-                <span class="nav-count count-pending" id="pendingNavCount">0</span>
-            </button>
-
-            <button class="nav-item" data-filter="escalated">
-                <span class="nav-icon">✓</span>
-                Escalated
-                <span class="nav-count count-escalated" id="escalatedNavCount">0</span>
-            </button>
-
-            <button class="nav-item" data-filter="archived">
-                <span class="nav-icon">□</span>
-                Archived
+        <div class="top-actions">
+            <button class="icon-btn" id="themeBtn">☾</button>
+            <button class="add-btn" id="openModalBtn">
+                ＋ Add New Escalation
             </button>
         </div>
 
-        <div class="nav-section">
-            <div class="nav-label">TOOLS</div>
+    </header>
 
-            <button class="nav-item" id="quickAddBtn">
-                <span class="nav-icon">＋</span>
-                New Escalation
-            </button>
+    <section class="stats">
 
-            <button class="nav-item" id="clearFilterBtn">
-                <span class="nav-icon">⌕</span>
-                Clear Filters
-            </button>
+        <div class="stat-card stat-purple">
+            <div class="stat-title">Total Escalations</div>
+            <div class="stat-number" id="totalCount">0</div>
+            <div class="stat-sub">All active cases</div>
         </div>
 
-        <div class="sidebar-bottom">
-            <div class="motivation">
-                <strong>Good work today!</strong>
-                <p>Keep your cases organized. No escalation left behind. ✨</p>
-            </div>
+        <div class="stat-card stat-yellow">
+            <div class="stat-title">Waiting for User</div>
+            <div class="stat-number" id="waitingCount">0</div>
+            <div class="stat-sub">Need user response</div>
         </div>
 
-    </aside>
-
-    <main class="main">
-
-        <header class="topbar">
-
-            <div class="greeting">
-                <h2>Hello, Cris! 👋</h2>
-                <p>Stay organized and never miss an escalation.</p>
-            </div>
-
-            <div class="top-actions">
-                <button class="icon-btn" id="themeBtn" title="Glow mode">☾</button>
-                <button class="add-btn" id="openModalBtn">＋ Add New Escalation</button>
-            </div>
-
-        </header>
-
-        <section class="stats">
-
-            <div class="stat-card stat-purple">
-                <div class="stat-title">Total Escalations</div>
-                <div class="stat-number" id="totalCount">0</div>
-                <div class="stat-sub">All active cases</div>
-            </div>
-
-            <div class="stat-card stat-yellow">
-                <div class="stat-title">Waiting for User</div>
-                <div class="stat-number" id="waitingCount">0</div>
-                <div class="stat-sub">Need user response</div>
-            </div>
-
-            <div class="stat-card stat-cyan">
-                <div class="stat-title">Ready to Escalate</div>
-                <div class="stat-number" id="readyCount">0</div>
-                <div class="stat-sub">Complete & ready</div>
-            </div>
-
-            <div class="stat-card stat-orange">
-                <div class="stat-title">Pending Escalation</div>
-                <div class="stat-number" id="pendingCount">0</div>
-                <div class="stat-sub">Not sent yet</div>
-            </div>
-
-            <div class="stat-card stat-green">
-                <div class="stat-title">Escalated</div>
-                <div class="stat-number" id="escalatedCount">0</div>
-                <div class="stat-sub">Successfully sent</div>
-            </div>
-
-        </section>
-
-        <section class="filter-bar">
-
-            <div class="search-box">
-                <span>⌕</span>
-                <input type="text" id="searchInput" placeholder="Search username, ticket, or issue...">
-            </div>
-
-            <select class="filter-select" id="statusFilter">
-                <option value="all">All Status</option>
-                <option value="waiting">Waiting for User</option>
-                <option value="ready">Ready to Escalate</option>
-                <option value="pending">Pending Escalation</option>
-                <option value="escalated">Escalated</option>
-                <option value="archived">Archived</option>
-            </select>
-
-            <select class="filter-select" id="sortFilter">
-                <option value="newest">Sort: Newest</option>
-                <option value="oldest">Sort: Oldest</option>
-                <option value="username">Sort: Username</option>
-            </select>
-
-        </section>
-
-        <div class="section-heading">
-            <h3 id="sectionTitle">All Escalations</h3>
-            <span class="case-count" id="caseCountText">0 cases</span>
+        <div class="stat-card stat-cyan">
+            <div class="stat-title">Ready to Escalate</div>
+            <div class="stat-number" id="readyCount">0</div>
+            <div class="stat-sub">Complete & ready</div>
         </div>
 
-        <section class="cases-grid" id="casesGrid"></section>
+        <div class="stat-card stat-orange">
+            <div class="stat-title">Pending Escalation</div>
+            <div class="stat-number" id="pendingCount">0</div>
+            <div class="stat-sub">Not sent yet</div>
+        </div>
 
-    </main>
+        <div class="stat-card stat-green">
+            <div class="stat-title">Escalated</div>
+            <div class="stat-number" id="escalatedCount">0</div>
+            <div class="stat-sub">Successfully sent</div>
+        </div>
 
+    </section>
+
+    <section class="filter-bar">
+
+        <div class="search-box">
+            <span>⌕</span>
+            <input type="text" id="searchInput" placeholder="Search username, ticket, or issue...">
+        </div>
+
+        <select class="filter-select" id="statusFilter">
+            <option value="all">All Status</option>
+            <option value="waiting">Waiting for User</option>
+            <option value="ready">Ready to Escalate</option>
+            <option value="pending">Pending Escalation</option>
+            <option value="escalated">Escalated</option>
+            <option value="archived">Archived</option>
+        </select>
+
+        <select class="filter-select" id="sortFilter">
+            <option value="newest">Sort: Newest</option>
+            <option value="oldest">Sort: Oldest</option>
+            <option value="username">Sort: Username</option>
+        </select>
+
+    </section>
+
+    <div class="section-heading">
+        <h3 id="sectionTitle">All Escalations</h3>
+        <span class="case-count" id="caseCountText">0 cases</span>
+    </div>
+
+    <section class="cases-grid" id="casesGrid"></section>
+
+</main>
 </div>
-
-<!-- MODAL -->
 
 <div class="modal" id="caseModal">
 
@@ -1261,22 +1262,22 @@ button {
 
                 <div class="form-group">
                     <label>USERNAME *</label>
-                    <input type="text" id="username" placeholder="e.g. username123" required>
+                    <input type="text" id="username" required>
                 </div>
 
                 <div class="form-group">
                     <label>USER ID</label>
-                    <input type="text" id="userId" placeholder="e.g. 123456789">
+                    <input type="text" id="userId">
                 </div>
 
                 <div class="form-group">
                     <label>TICKET NUMBER</label>
-                    <input type="text" id="ticketNumber" placeholder="e.g. #12345">
+                    <input type="text" id="ticketNumber">
                 </div>
 
                 <div class="form-group">
                     <label>ISSUE TYPE *</label>
-                    <input type="text" id="issueType" placeholder="e.g. Missing Reward" required>
+                    <input type="text" id="issueType" required>
                 </div>
 
                 <div class="form-group">
@@ -1300,7 +1301,7 @@ button {
 
                 <div class="form-group full">
                     <label>CASE NOTES</label>
-                    <textarea id="notes" placeholder="Add important details, troubleshooting steps, or anything you need to remember..."></textarea>
+                    <textarea id="notes" placeholder="Add important details or troubleshooting steps..."></textarea>
                 </div>
 
             </div>
@@ -1315,8 +1316,8 @@ button {
 
                 <label class="upload-label">
                     <span style="font-size:24px;">⇧</span>
-                    <strong>Upload files or drag & drop</strong>
-                    <span>Images are stored with your case</span>
+                    <strong>Upload images or drag & drop</strong>
+                    <span>Evidence will be saved with this case</span>
 
                     <input
                         type="file"
@@ -1331,8 +1332,13 @@ button {
             <div class="upload-preview-grid" id="uploadPreviewGrid"></div>
 
             <div class="modal-actions">
-                <button type="button" class="cancel-btn" id="cancelModalBtn">Cancel</button>
-                <button type="submit" class="save-btn">Save Escalation</button>
+                <button type="button" class="cancel-btn" id="cancelModalBtn">
+                    Cancel
+                </button>
+
+                <button type="submit" class="save-btn">
+                    Save Escalation
+                </button>
             </div>
 
         </form>
@@ -1344,10 +1350,6 @@ button {
 <div class="toast" id="toast"></div>
 
 <script>
-
-/* =========================
-   DATA
-========================= */
 
 const CHECKLIST_ITEMS = [
     "Username included",
@@ -1363,10 +1365,7 @@ let cases = JSON.parse(localStorage.getItem("escalationCases")) || [];
 let currentFilter = "all";
 let uploadedProofs = [];
 
-
-/* =========================
-   DEMO DATA
-========================= */
+/* DEMO DATA */
 
 if (!localStorage.getItem("escalationCases")) {
 
@@ -1405,7 +1404,7 @@ if (!localStorage.getItem("escalationCases")) {
             issueType: "Account Access",
             status: "pending",
             priority: "urgent",
-            notes: "Case is ready but has not been sent to the team yet.",
+            notes: "Case is ready but has not been sent yet.",
             createdAt: Date.now() - 5400000,
             checklist: [true, true, true, true, true, true, false],
             proofs: []
@@ -1415,16 +1414,10 @@ if (!localStorage.getItem("escalationCases")) {
     saveCases();
 }
 
-
-/* =========================
-   ELEMENTS
-========================= */
-
 const casesGrid = document.getElementById("casesGrid");
 const searchInput = document.getElementById("searchInput");
 const statusFilter = document.getElementById("statusFilter");
 const sortFilter = document.getElementById("sortFilter");
-
 const modal = document.getElementById("caseModal");
 const caseForm = document.getElementById("caseForm");
 const checklistEditor = document.getElementById("checklistEditor");
@@ -1432,22 +1425,11 @@ const uploadPreviewGrid = document.getElementById("uploadPreviewGrid");
 const proofUpload = document.getElementById("proofUpload");
 const uploadArea = document.getElementById("uploadArea");
 
-
-/* =========================
-   SAVE
-========================= */
-
 function saveCases() {
     localStorage.setItem("escalationCases", JSON.stringify(cases));
 }
 
-
-/* =========================
-   STATUS
-========================= */
-
 function statusName(status) {
-
     const names = {
         waiting: "WAITING FOR USER",
         ready: "READY TO ESCALATE",
@@ -1460,7 +1442,6 @@ function statusName(status) {
 }
 
 function getAge(timestamp) {
-
     const diff = Date.now() - timestamp;
     const minutes = Math.floor(diff / 60000);
     const hours = Math.floor(minutes / 60);
@@ -1472,15 +1453,21 @@ function getAge(timestamp) {
 }
 
 function isUrgentAge(caseItem) {
-    return caseItem.status !== "escalated" &&
-           caseItem.status !== "archived" &&
-           Date.now() - caseItem.createdAt > 4 * 60 * 60 * 1000;
+    return (
+        caseItem.status !== "escalated" &&
+        caseItem.status !== "archived" &&
+        Date.now() - caseItem.createdAt > 4 * 60 * 60 * 1000
+    );
 }
 
-
-/* =========================
-   RENDER STATS
-========================= */
+function escapeHTML(value) {
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
 function renderStats() {
 
@@ -1505,11 +1492,6 @@ function renderStats() {
     document.getElementById("pendingNavCount").textContent = counts.pending;
     document.getElementById("escalatedNavCount").textContent = counts.escalated;
 }
-
-
-/* =========================
-   RENDER CASES
-========================= */
 
 function renderCases() {
 
@@ -1536,6 +1518,7 @@ function renderCases() {
         if (sort === "newest") return b.createdAt - a.createdAt;
         if (sort === "oldest") return a.createdAt - b.createdAt;
         if (sort === "username") return a.username.localeCompare(b.username);
+        return 0;
     });
 
     const titles = {
@@ -1554,7 +1537,6 @@ function renderCases() {
         `${filtered.length} ${filtered.length === 1 ? "case" : "cases"}`;
 
     if (!filtered.length) {
-
         casesGrid.innerHTML = `
             <div class="empty-state">
                 <div>
@@ -1564,13 +1546,11 @@ function renderCases() {
                 </div>
             </div>
         `;
-
         return;
     }
 
     casesGrid.innerHTML = filtered.map(renderCaseCard).join("");
 }
-
 
 function renderCaseCard(caseItem) {
 
@@ -1592,11 +1572,7 @@ function renderCaseCard(caseItem) {
 
         const previews = caseItem.proofs.slice(0, 3).map(proof => `
             <div class="proof-thumb">
-                ${
-                    proof.type && proof.type.startsWith("image/")
-                    ? `<img src="${proof.data}" alt="Evidence">`
-                    : "📎"
-                }
+                <img src="${proof.data}" alt="Evidence">
             </div>
         `).join("");
 
@@ -1605,10 +1581,11 @@ function renderCaseCard(caseItem) {
         proofsHTML = `
             <div class="proof-preview">
                 ${previews}
-                ${remaining > 0
-                    ? `<div class="proof-thumb proof-more">+${remaining}</div>`
-                    : ""
-                }
+                ${remaining > 0 ? `
+                    <div class="proof-thumb proof-more">
+                        +${remaining}
+                    </div>
+                ` : ""}
             </div>
         `;
 
@@ -1666,7 +1643,7 @@ function renderCaseCard(caseItem) {
             <div class="user-info">
 
                 <div class="avatar">
-                    ${caseItem.username.charAt(0).toUpperCase()}
+                    ${escapeHTML(caseItem.username.charAt(0).toUpperCase())}
                 </div>
 
                 <div>
@@ -1691,7 +1668,7 @@ function renderCaseCard(caseItem) {
                 <div>
                     <span class="info-label">Priority</span>
                     <span class="issue-tag">
-                        ${caseItem.priority.toUpperCase()}
+                        ${escapeHTML(caseItem.priority.toUpperCase())}
                     </span>
                 </div>
 
@@ -1724,31 +1701,19 @@ function renderCaseCard(caseItem) {
 
                 ${actionButton}
 
+                <button
+                    class="card-btn delete-btn"
+                    onclick="deleteCase('${caseItem.id}')"
+                    title="Delete Case"
+                >
+                    🗑
+                </button>
+
             </div>
 
         </article>
     `;
 }
-
-
-/* =========================
-   SECURITY HELPER
-========================= */
-
-function escapeHTML(value) {
-
-    return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
-/* =========================
-   CHECKLIST EDITOR
-========================= */
 
 function renderChecklist(checklist = []) {
 
@@ -1765,11 +1730,6 @@ function renderChecklist(checklist = []) {
     `).join("");
 }
 
-
-/* =========================
-   MODAL
-========================= */
-
 function openNewCase() {
 
     caseForm.reset();
@@ -1779,9 +1739,15 @@ function openNewCase() {
 
     uploadedProofs = [];
 
-    renderChecklist(
-        [false, false, false, false, false, false, false]
-    );
+    renderChecklist([
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+    ]);
 
     renderUploadPreviews();
 
@@ -1798,13 +1764,12 @@ document.getElementById("closeModalBtn").addEventListener("click", closeModal);
 document.getElementById("cancelModalBtn").addEventListener("click", closeModal);
 
 modal.addEventListener("click", e => {
-    if (e.target === modal) closeModal();
+    if (e.target === modal) {
+        closeModal();
+    }
 });
 
-
-/* =========================
-   UPLOAD PROOFS
-========================= */
+/* UPLOAD */
 
 proofUpload.addEventListener("change", e => {
     handleFiles([...e.target.files]);
@@ -1822,18 +1787,18 @@ uploadArea.addEventListener("dragleave", () => {
 uploadArea.addEventListener("drop", e => {
 
     e.preventDefault();
+
     uploadArea.classList.remove("dragging");
 
     handleFiles([...e.dataTransfer.files]);
 });
-
 
 function handleFiles(files) {
 
     files.forEach(file => {
 
         if (!file.type.startsWith("image/")) {
-            showToast("For now, please upload image files only.");
+            showToast("Please upload image files only.");
             return;
         }
 
@@ -1853,7 +1818,6 @@ function handleFiles(files) {
         reader.readAsDataURL(file);
     });
 }
-
 
 function renderUploadPreviews() {
 
@@ -1876,10 +1840,7 @@ function removeProof(index) {
     renderUploadPreviews();
 }
 
-
-/* =========================
-   SAVE FORM
-========================= */
+/* SAVE CASE */
 
 caseForm.addEventListener("submit", e => {
 
@@ -1894,13 +1855,14 @@ caseForm.addEventListener("submit", e => {
 
     let status = document.getElementById("status").value;
 
-    // Automatically ready when everything is complete.
     if (
         completed === CHECKLIST_ITEMS.length &&
         status !== "escalated"
     ) {
         status = "ready";
     }
+
+    const existingCase = cases.find(c => c.id === id);
 
     const caseData = {
         id: id || crypto.randomUUID(),
@@ -1913,8 +1875,8 @@ caseForm.addEventListener("submit", e => {
         notes: document.getElementById("notes").value.trim(),
         checklist,
         proofs: uploadedProofs,
-        createdAt: id
-            ? cases.find(c => c.id === id).createdAt
+        createdAt: existingCase
+            ? existingCase.createdAt
             : Date.now()
     };
 
@@ -1938,10 +1900,7 @@ caseForm.addEventListener("submit", e => {
     );
 });
 
-
-/* =========================
-   EDIT
-========================= */
+/* EDIT */
 
 function editCase(id) {
 
@@ -1969,10 +1928,7 @@ function editCase(id) {
     modal.classList.add("show");
 }
 
-
-/* =========================
-   ACTIONS
-========================= */
+/* ACTIONS */
 
 function markEscalated(id) {
 
@@ -2011,10 +1967,30 @@ function moveToPending(id) {
     showToast("Case moved to Pending Escalation.");
 }
 
+/* DELETE CASE */
 
-/* =========================
-   FILTERS
-========================= */
+function deleteCase(id) {
+
+    const caseItem = cases.find(c => c.id === id);
+
+    if (!caseItem) return;
+
+    const confirmed = confirm(
+        `Delete the escalation for "${caseItem.username}"?\n\nThis action cannot be undone.`
+    );
+
+    if (!confirmed) return;
+
+    cases = cases.filter(c => c.id !== id);
+
+    saveCases();
+    renderStats();
+    renderCases();
+
+    showToast("Escalation deleted successfully.");
+}
+
+/* FILTERS */
 
 document.querySelectorAll(".nav-item[data-filter]")
 .forEach(button => {
@@ -2039,10 +2015,12 @@ statusFilter.addEventListener("change", () => {
 
     document.querySelectorAll(".nav-item[data-filter]")
         .forEach(btn => {
+
             btn.classList.toggle(
                 "active",
                 btn.dataset.filter === currentFilter
             );
+
         });
 
     renderCases();
@@ -2061,19 +2039,18 @@ document.getElementById("clearFilterBtn")
 
     document.querySelectorAll(".nav-item[data-filter]")
         .forEach(btn => {
+
             btn.classList.toggle(
                 "active",
                 btn.dataset.filter === "all"
             );
+
         });
 
     renderCases();
 });
 
-
-/* =========================
-   THEME BUTTON
-========================= */
+/* THEME */
 
 document.getElementById("themeBtn")
 .addEventListener("click", () => {
@@ -2082,31 +2059,26 @@ document.getElementById("themeBtn")
 
     if (document.body.classList.contains("extra-glow")) {
 
-        document.body.style.background =
-            `
+        document.body.style.background = `
             radial-gradient(circle at 15% 0%, rgba(209,140,255,.2), transparent 30%),
             radial-gradient(circle at 90% 20%, rgba(104,221,255,.15), transparent 30%),
             radial-gradient(circle at 50% 100%, rgba(255,135,215,.08), transparent 35%),
             #080a12
-            `;
+        `;
 
         showToast("Extra glow activated ✨");
 
     } else {
 
-        document.body.style.background =
-            `
-            radial-gradient(circle at 15% 0%, rgba(120, 77, 255, .12), transparent 28%),
-            radial-gradient(circle at 90% 20%, rgba(0, 204, 255, .08), transparent 25%),
+        document.body.style.background = `
+            radial-gradient(circle at 15% 0%, rgba(120,77,255,.12), transparent 28%),
+            radial-gradient(circle at 90% 20%, rgba(0,204,255,.08), transparent 25%),
             #080a12
-            `;
+        `;
     }
 });
 
-
-/* =========================
-   TOAST
-========================= */
+/* TOAST */
 
 let toastTimer;
 
@@ -2124,10 +2096,7 @@ function showToast(message) {
     }, 2800);
 }
 
-
-/* =========================
-   INIT
-========================= */
+/* INIT */
 
 renderStats();
 renderCases();
