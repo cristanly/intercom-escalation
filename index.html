@@ -154,6 +154,9 @@ button {
 .nav-icon {
     width: 22px;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .nav-count {
@@ -191,6 +194,11 @@ button {
 .count-rejected {
     color: var(--red);
     background: rgba(255,127,150,.13);
+}
+
+.count-deleted {
+    color: var(--muted);
+    background: rgba(255,255,255,.1);
 }
 
 .sidebar-bottom {
@@ -472,6 +480,7 @@ button {
 .case-card.status-pending { box-shadow: inset 0 1px 0 rgba(255,157,112,.35); }
 .case-card.status-escalated { box-shadow: inset 0 1px 0 rgba(105,240,193,.35); }
 .case-card.status-rejected { box-shadow: inset 0 1px 0 rgba(255,127,150,.35); }
+.case-card.status-deleted { box-shadow: inset 0 1px 0 rgba(137,144,170,.35); opacity: .8; }
 
 .status-label {
     font-size: 11px;
@@ -484,7 +493,7 @@ button {
 .status-pending .status-label { color: var(--orange); }
 .status-escalated .status-label { color: var(--green); }
 .status-rejected .status-label { color: var(--red); }
-.status-archived .status-label { color: var(--muted); }
+.status-deleted .status-label { color: var(--muted); }
 
 .card-top {
     display: flex;
@@ -584,8 +593,8 @@ button {
 
 .mini-checklist {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: 1fr;
+    gap: 8px;
 }
 
 .mini-check {
@@ -683,6 +692,10 @@ button {
     font-size: 12px;
     font-weight: 700;
     transition: .2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 
 .card-btn:hover {
@@ -723,6 +736,15 @@ button {
     background: rgba(255,127,150,.12);
     border-color: var(--red);
     box-shadow: 0 0 18px rgba(255,127,150,.15);
+}
+
+.restore-btn {
+    border-color: var(--cyan);
+    color: var(--cyan);
+}
+
+.restore-btn:hover {
+    background: rgba(104,221,255,.12);
 }
 
 /* EMPTY STATE */
@@ -853,7 +875,7 @@ button {
 
 .checklist-editor {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 9px;
 }
 
@@ -1331,9 +1353,10 @@ button {
             <span class="nav-count count-rejected" id="rejectedNavCount">0</span>
         </button>
 
-        <button class="nav-item" data-filter="archived">
-            <span class="nav-icon"><svg class="icon-line" viewBox="0 0 24 24"><path d="M4 7h16v13H4z"/><path d="M3 4h18v3H3z"/><path d="M10 12h4"/></svg></span>
-            Archived
+        <button class="nav-item" data-filter="deleted">
+            <span class="nav-icon"><svg class="icon-line" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
+            Deleted
+            <span class="nav-count count-deleted" id="deletedNavCount">0</span>
         </button>
 
         <button class="nav-item review-nav" id="reviewsNavBtn" type="button">
@@ -1446,7 +1469,7 @@ button {
             <option value="pending">Pending Escalation</option>
             <option value="escalated">Escalated</option>
             <option value="rejected">Rejected</option>
-            <option value="archived">Archived</option>
+            <option value="deleted">Deleted</option>
         </select>
 
         <select class="filter-select" id="sortFilter">
@@ -1527,7 +1550,7 @@ button {
                         <option value="ready">Ready to Escalate</option>
                         <option value="escalated">Escalated</option>
                         <option value="rejected">Rejected</option>
-                        <option value="archived">Archived</option>
+                        <option value="deleted">Deleted</option>
                     </select>
                 </div>
 
@@ -1627,10 +1650,12 @@ button {
 
 <script>
 const CHECKLIST_ITEMS = [
-    "Proof received",
-    "Screenshot Agent Verified",
-    "Troubleshooting done",
+    "Proof Received",
+    "Troubleshoot",
+    "Proof Verified"
 ];
+
+const TRASH_SVG = `<svg class="icon-line" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>`;
 
 let cases = JSON.parse(localStorage.getItem("escalationCases")) || [];
 let currentFilter = "all";
@@ -1648,7 +1673,7 @@ if (!localStorage.getItem("escalationCases")) {
             priority: "normal",
             notes: "Waiting for the user to provide a screenshot.",
             createdAt: Date.now() - 7200000,
-            checklist: [true, true, true, false, false, false, false],
+            checklist: [true, false, false],
             proofs: []
         },
         {
@@ -1661,7 +1686,7 @@ if (!localStorage.getItem("escalationCases")) {
             priority: "high",
             notes: "All details checked and complete.",
             createdAt: Date.now() - 2100000,
-            checklist: [true, true, true, true, true, true, true],
+            checklist: [true, true, true],
             proofs: []
         }
     ];
@@ -1694,7 +1719,7 @@ function statusName(status) {
         pending: "PENDING ESCALATION",
         escalated: "ESCALATED",
         rejected: "REJECTED",
-        archived: "ARCHIVED"
+        deleted: "DELETED"
     };
     return names[status] || status.toUpperCase();
 }
@@ -1713,7 +1738,7 @@ function getAge(timestamp) {
 function isUrgentAge(caseItem) {
     return (
         caseItem.status !== "escalated" &&
-        caseItem.status !== "archived" &&
+        caseItem.status !== "deleted" &&
         caseItem.status !== "rejected" &&
         Date.now() - caseItem.createdAt > 4 * 60 * 60 * 1000
     );
@@ -1729,7 +1754,7 @@ function escapeHTML(value) {
 }
 
 function renderStats() {
-    const activeCases = cases.filter(c => c.status !== "archived");
+    const activeCases = cases.filter(c => c.status !== "deleted");
 
     const counts = {
         total: activeCases.length,
@@ -1737,7 +1762,8 @@ function renderStats() {
         ready: cases.filter(c => c.status === "ready").length,
         pending: cases.filter(c => c.status === "pending").length,
         escalated: cases.filter(c => c.status === "escalated").length,
-        rejected: cases.filter(c => c.status === "rejected").length
+        rejected: cases.filter(c => c.status === "rejected").length,
+        deleted: cases.filter(c => c.status === "deleted").length
     };
 
     document.getElementById("totalCount").textContent = counts.total;
@@ -1752,13 +1778,16 @@ function renderStats() {
     document.getElementById("pendingNavCount").textContent = counts.pending;
     document.getElementById("escalatedNavCount").textContent = counts.escalated;
     document.getElementById("rejectedNavCount").textContent = counts.rejected;
+    document.getElementById("deletedNavCount").textContent = counts.deleted;
 }
 
 function renderCases() {
     let filtered = [...cases];
     const search = searchInput.value.toLowerCase().trim();
 
-    if (currentFilter !== "all") {
+    if (currentFilter === "all") {
+        filtered = filtered.filter(c => c.status !== "deleted");
+    } else {
         filtered = filtered.filter(c => c.status === currentFilter);
     }
 
@@ -1786,7 +1815,7 @@ function renderCases() {
         pending: "Pending Escalation",
         escalated: "Escalated Cases",
         rejected: "Rejected Cases",
-        archived: "Archived Cases"
+        deleted: "Deleted Cases (Recycle Bin)"
     };
 
     document.getElementById("sectionTitle").textContent = titles[currentFilter] || "All Escalations";
@@ -1849,7 +1878,11 @@ function renderCaseCard(caseItem) {
         actionButton = `<button class="card-btn primary-action rejected" disabled>✖ Rejected</button>`;
     } else if (caseItem.status === "waiting") {
         actionButton = `<button class="card-btn" onclick="moveToPending('${caseItem.id}')">Update Status</button>`;
+    } else if (caseItem.status === "deleted") {
+        actionButton = `<button class="card-btn restore-btn" onclick="restoreCase('${caseItem.id}')">↺ Restore</button>`;
     }
+
+    const deleteTooltip = caseItem.status === "deleted" ? "Permanently Delete Case" : "Move to Deleted";
 
     return `
         <article class="case-card status-${caseItem.status}">
@@ -1892,7 +1925,7 @@ function renderCaseCard(caseItem) {
             <div class="card-actions">
                 <button class="card-btn" onclick="editCase('${caseItem.id}')">View Details</button>
                 ${actionButton}
-                <button class="card-btn delete-btn" onclick="deleteCase('${caseItem.id}')" title="Delete Case">🗑</button>
+                <button class="card-btn delete-btn" onclick="deleteCase('${caseItem.id}')" title="${deleteTooltip}">${TRASH_SVG}</button>
             </div>
         </article>
     `;
@@ -1912,7 +1945,7 @@ function openNewCase() {
     document.getElementById("caseId").value = "";
     document.getElementById("modalTitle").textContent = "New Escalation";
     uploadedProofs = [];
-    renderChecklist([false, false, false, false, false, false, false]);
+    renderChecklist([false, false, false]);
     renderUploadPreviews();
     modal.classList.add("show");
 }
@@ -2001,7 +2034,7 @@ caseForm.addEventListener("submit", e => {
     const completed = checklist.filter(Boolean).length;
     let status = document.getElementById("status").value;
 
-    if (completed === CHECKLIST_ITEMS.length && status !== "escalated" && status !== "rejected" && status !== "archived") {
+    if (completed === CHECKLIST_ITEMS.length && status !== "escalated" && status !== "rejected" && status !== "deleted") {
         status = "ready";
     }
 
@@ -2072,16 +2105,37 @@ function moveToPending(id) {
     showToast("Case moved to Pending Escalation.");
 }
 
-function deleteCase(id) {
-    const caseItem = cases.find(c => c.id === id);
-    if (!caseItem) return;
-    if (!confirm(`Delete escalation for "${caseItem.username}"?`)) return;
-
-    cases = cases.filter(c => c.id !== id);
+function restoreCase(id) {
+    cases = cases.map(c => {
+        if (c.id === id) {
+            const completed = c.checklist.filter(Boolean).length;
+            const newStatus = completed === CHECKLIST_ITEMS.length ? "ready" : "waiting";
+            return { ...c, status: newStatus };
+        }
+        return c;
+    });
     saveCases();
     renderStats();
     renderCases();
-    showToast("Escalation deleted successfully.");
+    showToast("Case restored from deleted!");
+}
+
+function deleteCase(id) {
+    const caseItem = cases.find(c => c.id === id);
+    if (!caseItem) return;
+
+    if (caseItem.status === "deleted") {
+        if (!confirm(`Permanently delete escalation for "${caseItem.username}"? This cannot be undone.`)) return;
+        cases = cases.filter(c => c.id !== id);
+        showToast("Case permanently deleted.");
+    } else {
+        cases = cases.map(c => c.id === id ? { ...c, status: "deleted" } : c);
+        showToast("Case moved to Deleted.");
+    }
+
+    saveCases();
+    renderStats();
+    renderCases();
 }
 
 /* FILTERS */
@@ -2255,7 +2309,7 @@ function renderReviews(){
             <td>
                 <div class="review-actions">
                     <button class="review-action" onclick="editReview('${r.id}')" title="Edit"><svg class="icon-line" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg></button>
-                    <button class="review-action delete" onclick="deleteReview('${r.id}')" title="Delete"><svg class="icon-line" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3"/></svg></button>
+                    <button class="review-action delete" onclick="deleteReview('${r.id}')" title="Delete">${TRASH_SVG}</button>
                 </div>
             </td>
         </tr>
