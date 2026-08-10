@@ -30,6 +30,7 @@
     --green: #69f0c1;
     --pink: #ff87d7;
     --red: #ff7f96;
+    --teal: #38ef7d;
 }
 
 * {
@@ -76,6 +77,7 @@ button {
     height: 100vh;
     backdrop-filter: blur(20px);
     z-index: 20;
+    overflow-y: auto;
 }
 
 .brand {
@@ -171,63 +173,13 @@ button {
     font-weight: 700;
 }
 
-.count-ready {
-    color: var(--cyan);
-    background: rgba(104,221,255,.13);
-}
-
-.count-waiting {
-    color: var(--yellow);
-    background: rgba(255,226,109,.13);
-}
-
-.count-pending {
-    color: var(--orange);
-    background: rgba(255,157,112,.13);
-}
-
-.count-escalated {
-    color: var(--green);
-    background: rgba(105,240,193,.13);
-}
-
-.count-rejected {
-    color: var(--red);
-    background: rgba(255,127,150,.13);
-}
-
-.count-deleted {
-    color: var(--muted);
-    background: rgba(255,255,255,.1);
-}
-
-.sidebar-bottom {
-    position: absolute;
-    bottom: 22px;
-    left: 16px;
-    right: 16px;
-}
-
-.motivation {
-    padding: 18px;
-    border-radius: 16px;
-    border: 1px solid rgba(209,140,255,.18);
-    background:
-        radial-gradient(circle at 20% 10%, rgba(209,140,255,.15), transparent 40%),
-        var(--panel);
-}
-
-.motivation strong {
-    color: var(--pink);
-    font-size: 13px;
-}
-
-.motivation p {
-    margin: 7px 0 0;
-    color: var(--muted);
-    font-size: 12px;
-    line-height: 1.5;
-}
+.count-ready { color: var(--cyan); background: rgba(104,221,255,.13); }
+.count-waiting { color: var(--yellow); background: rgba(255,226,109,.13); }
+.count-pending { color: var(--orange); background: rgba(255,157,112,.13); }
+.count-escalated { color: var(--green); background: rgba(105,240,193,.13); }
+.count-resolved { color: var(--teal); background: rgba(56,239,125,.15); }
+.count-rejected { color: var(--red); background: rgba(255,127,150,.13); }
+.count-deleted { color: var(--muted); background: rgba(255,255,255,.1); }
 
 /* MAIN */
 
@@ -264,37 +216,6 @@ button {
     flex-wrap: wrap;
 }
 
-.icon-btn {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--panel);
-    color: var(--text);
-    transition: .2s;
-}
-
-.icon-btn:hover {
-    border-color: var(--purple);
-    box-shadow: 0 0 18px var(--purple-glow);
-}
-
-.secondary-btn {
-    border: 1px solid var(--border);
-    background: var(--panel);
-    color: var(--text);
-    padding: 12px 14px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 13px;
-    transition: .2s;
-}
-
-.secondary-btn:hover {
-    border-color: var(--cyan);
-    color: white;
-}
-
 .add-btn {
     border: 1px solid var(--purple);
     background: linear-gradient(135deg, rgba(209,140,255,.2), rgba(255,135,215,.12));
@@ -315,14 +236,14 @@ button {
 
 .stats {
     display: grid;
-    grid-template-columns: repeat(6, minmax(130px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(7, minmax(110px, 1fr));
+    gap: 12px;
     margin-bottom: 26px;
 }
 
 .stat-card {
-    min-height: 125px;
-    padding: 16px;
+    min-height: 120px;
+    padding: 14px;
     border-radius: 18px;
     background: var(--panel);
     border: 1px solid var(--border);
@@ -338,10 +259,10 @@ button {
 .stat-card::after {
     content: "";
     position: absolute;
-    width: 100px;
-    height: 100px;
-    right: -35px;
-    bottom: -40px;
+    width: 90px;
+    height: 90px;
+    right: -30px;
+    bottom: -35px;
     border-radius: 50%;
     filter: blur(20px);
     opacity: .25;
@@ -351,14 +272,14 @@ button {
     color: var(--muted);
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: .6px;
+    letter-spacing: .5px;
     text-transform: uppercase;
 }
 
 .stat-number {
     font-family: "Space Grotesk", sans-serif;
-    font-size: 32px;
-    margin-top: 10px;
+    font-size: 28px;
+    margin-top: 8px;
     font-weight: 700;
 }
 
@@ -371,17 +292,20 @@ button {
 .stat-purple { border-color: rgba(209,140,255,.3); }
 .stat-purple::after { background: var(--purple); }
 
-.stat-yellow { border-color: rgba(255,226,109,.3); }
-.stat-yellow::after { background: var(--yellow); }
-
 .stat-cyan { border-color: rgba(104,221,255,.3); }
 .stat-cyan::after { background: var(--cyan); }
+
+.stat-yellow { border-color: rgba(255,226,109,.3); }
+.stat-yellow::after { background: var(--yellow); }
 
 .stat-orange { border-color: rgba(255,157,112,.3); }
 .stat-orange::after { background: var(--orange); }
 
 .stat-green { border-color: rgba(105,240,193,.3); }
 .stat-green::after { background: var(--green); }
+
+.stat-teal { border-color: rgba(56,239,125,.3); }
+.stat-teal::after { background: var(--teal); }
 
 .stat-red { border-color: rgba(255,127,150,.3); }
 .stat-red::after { background: var(--red); }
@@ -479,6 +403,7 @@ button {
 .case-card.status-ready { box-shadow: inset 0 1px 0 rgba(104,221,255,.35), 0 0 25px rgba(104,221,255,.05); }
 .case-card.status-pending { box-shadow: inset 0 1px 0 rgba(255,157,112,.35); }
 .case-card.status-escalated { box-shadow: inset 0 1px 0 rgba(105,240,193,.35); }
+.case-card.status-resolved { box-shadow: inset 0 1px 0 rgba(56,239,125,.4), 0 0 20px rgba(56,239,125,.08); }
 .case-card.status-rejected { box-shadow: inset 0 1px 0 rgba(255,127,150,.35); }
 .case-card.status-deleted { box-shadow: inset 0 1px 0 rgba(137,144,170,.35); opacity: .8; }
 
@@ -492,6 +417,7 @@ button {
 .status-ready .status-label { color: var(--cyan); }
 .status-pending .status-label { color: var(--orange); }
 .status-escalated .status-label { color: var(--green); }
+.status-resolved .status-label { color: var(--teal); }
 .status-rejected .status-label { color: var(--red); }
 .status-deleted .status-label { color: var(--muted); }
 
@@ -505,10 +431,6 @@ button {
 .case-age {
     color: var(--muted);
     font-size: 11px;
-}
-
-.case-age.urgent {
-    color: var(--red);
 }
 
 .user-info {
@@ -573,107 +495,42 @@ button {
     white-space: nowrap;
 }
 
-/* CHECKLIST */
-
-.checklist-header {
-    display: flex;
-    justify-content: space-between;
-    margin: 18px 0 13px;
-}
-
-.checklist-header strong {
-    font-size: 13px;
-    letter-spacing: .6px;
-}
-
-.progress-text {
-    font-size: 12px;
-    color: var(--cyan);
-}
-
-.mini-checklist {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
-}
-
-.mini-check {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    color: var(--muted);
-    font-size: 12px;
-    min-width: 0;
-    line-height: 1.4;
-}
-
-.mini-check.done {
-    color: #c7f8e8;
-}
-
-.mini-box {
-    width: 18px;
-    height: 18px;
-    border: 1px solid #4c546b;
-    border-radius: 5px;
-    flex: none;
-    display: grid;
-    place-items: center;
-    font-size: 11px;
-}
-
-.mini-check.done .mini-box {
-    border-color: var(--green);
-    background: rgba(105,240,193,.14);
-    color: var(--green);
-}
-
+/* PROOF ATTACHMENTS PREVIEW IN CARD */
 .evidence-section {
-    margin-top: 18px;
+    margin-top: 14px;
     border-top: 1px solid var(--border);
-    padding-top: 15px;
+    padding-top: 12px;
 }
 
 .evidence-title {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     color: var(--muted);
     letter-spacing: .6px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
 }
 
 .proof-preview {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .proof-thumb {
-    width: 48px;
-    height: 48px;
-    border-radius: 9px;
+    width: 46px;
+    height: 46px;
+    border-radius: 8px;
     overflow: hidden;
     border: 1px solid var(--border);
     background: var(--panel-light);
-    display: grid;
-    place-items: center;
-    font-size: 16px;
+    cursor: pointer;
 }
 
 .proof-thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-.proof-more {
-    font-size: 11px;
-    color: var(--muted);
-}
-
-.no-proofs {
-    color: #596078;
-    font-size: 11px;
-    padding: 7px 0;
 }
 
 .card-actions {
@@ -702,28 +559,10 @@ button {
     background: rgba(255,255,255,.05);
 }
 
-.primary-action.ready {
-    border-color: var(--cyan);
-    background: rgba(104,221,255,.12);
-    color: var(--cyan);
-}
-
-.primary-action.pending {
-    border-color: var(--orange);
-    background: rgba(255,157,112,.12);
-    color: var(--orange);
-}
-
-.primary-action.escalated {
-    border-color: var(--green);
-    background: rgba(105,240,193,.1);
-    color: var(--green);
-}
-
-.primary-action.rejected {
-    border-color: var(--red);
-    background: rgba(255,127,150,.1);
-    color: var(--red);
+.primary-action {
+    border-color: var(--purple);
+    background: rgba(209,140,255,.12);
+    color: var(--purple);
 }
 
 .delete-btn {
@@ -735,16 +574,11 @@ button {
 .delete-btn:hover {
     background: rgba(255,127,150,.12);
     border-color: var(--red);
-    box-shadow: 0 0 18px rgba(255,127,150,.15);
 }
 
 .restore-btn {
     border-color: var(--cyan);
     color: var(--cyan);
-}
-
-.restore-btn:hover {
-    background: rgba(104,221,255,.12);
 }
 
 /* EMPTY STATE */
@@ -857,7 +691,7 @@ button {
 }
 
 .form-group textarea {
-    min-height: 90px;
+    min-height: 80px;
     resize: vertical;
 }
 
@@ -868,9 +702,10 @@ button {
 }
 
 .modal-section-title {
-    margin: 25px 0 12px;
-    font-size: 15px;
+    margin: 22px 0 12px;
+    font-size: 14px;
     color: var(--text);
+    font-weight: 700;
 }
 
 .checklist-editor {
@@ -888,6 +723,7 @@ button {
     align-items: center;
     color: var(--muted);
     font-size: 13px;
+    cursor: pointer;
 }
 
 .check-row input {
@@ -896,13 +732,15 @@ button {
     height: 17px;
 }
 
+/* UPLOAD AREA */
 .upload-area {
     border: 1px dashed rgba(104,221,255,.4);
     border-radius: 14px;
-    padding: 24px;
+    padding: 20px;
     text-align: center;
     color: var(--muted);
     transition: .2s;
+    background: rgba(104,221,255,.02);
 }
 
 .upload-area:hover,
@@ -920,6 +758,7 @@ button {
     flex-direction: column;
     gap: 7px;
     cursor: pointer;
+    font-size: 13px;
 }
 
 .upload-label strong {
@@ -934,9 +773,9 @@ button {
 }
 
 .upload-preview {
-    width: 90px;
-    height: 90px;
-    border-radius: 12px;
+    width: 75px;
+    height: 75px;
+    border-radius: 10px;
     overflow: hidden;
     position: relative;
     border: 1px solid var(--border);
@@ -950,14 +789,17 @@ button {
 
 .remove-preview {
     position: absolute;
-    top: 4px;
-    right: 4px;
+    top: 3px;
+    right: 3px;
     border: none;
-    width: 23px;
-    height: 23px;
-    border-radius: 7px;
-    background: rgba(0,0,0,.7);
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    background: rgba(0,0,0,.75);
     color: white;
+    font-size: 11px;
+    display: grid;
+    place-items: center;
 }
 
 .modal-actions {
@@ -1195,7 +1037,7 @@ button {
 
 @media (max-width: 1200px) {
     .stats {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
@@ -1230,7 +1072,7 @@ button {
         width: 100%;
     }
 
-    .add-btn, .secondary-btn {
+    .add-btn {
         flex: 1;
         text-align: center;
     }
@@ -1249,8 +1091,7 @@ button {
 
     .case-info,
     .form-grid,
-    .checklist-editor,
-    .mini-checklist {
+    .checklist-editor {
         grid-template-columns: 1fr;
     }
 }
@@ -1347,6 +1188,12 @@ button {
             <span class="nav-count count-escalated" id="escalatedNavCount">0</span>
         </button>
 
+        <button class="nav-item" data-filter="resolved">
+            <span class="nav-icon"><svg class="icon-line" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+            Resolved
+            <span class="nav-count count-resolved" id="resolvedNavCount">0</span>
+        </button>
+
         <button class="nav-item" data-filter="rejected">
             <span class="nav-icon"><svg class="icon-line" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></svg></span>
             Rejected
@@ -1424,6 +1271,11 @@ button {
         <div class="stat-card stat-green">
             <div class="stat-title">Escalated</div>
             <div class="stat-number" id="statEscalated">0</div>
+            <div class="stat-sub">In progress</div>
+        </div>
+        <div class="stat-card stat-teal">
+            <div class="stat-title">Resolved</div>
+            <div class="stat-number" id="statResolved">0</div>
             <div class="stat-sub">Completed</div>
         </div>
         <div class="stat-card stat-red">
@@ -1446,6 +1298,7 @@ button {
             <option value="waiting">Waiting for User</option>
             <option value="pending">Pending Escalation</option>
             <option value="escalated">Escalated</option>
+            <option value="resolved">Resolved</option>
             <option value="rejected">Rejected</option>
         </select>
     </div>
@@ -1460,7 +1313,7 @@ button {
         <!-- Cards inserted via JS -->
     </div>
 
-    <!-- REVIEWS TRACKER VIEW (Hidden by default) -->
+    <!-- REVIEWS TRACKER VIEW -->
     <div class="reviews-view" id="reviewsView">
         <div class="reviews-top">
             <div class="reviews-title-wrap">
@@ -1558,12 +1411,25 @@ button {
                         <option value="waiting">Waiting for User</option>
                         <option value="pending">Pending Escalation</option>
                         <option value="escalated">Escalated</option>
+                        <option value="resolved">Resolved</option>
                         <option value="rejected">Rejected</option>
                     </select>
                 </div>
                 <div class="form-group full">
                     <label>DESCRIPTION / NOTES</label>
                     <textarea id="caseNotes" placeholder="Additional details about this case..."></textarea>
+                </div>
+
+                <!-- EVIDENCE & PROOF UPLOAD -->
+                <div class="form-group full">
+                    <label>EVIDENCE / PROOF ATTACHMENTS</label>
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="fileInput" multiple accept="image/*">
+                        <label for="fileInput" class="upload-label">
+                            <span>📷 Click or drag images here to <strong>upload proof</strong></span>
+                        </label>
+                    </div>
+                    <div class="upload-preview-grid" id="uploadPreviewGrid"></div>
                 </div>
             </div>
 
@@ -1667,6 +1533,7 @@ let cases = JSON.parse(localStorage.getItem('escalation_cases')) || [
         status: 'ready',
         notes: 'User submitted valid passport and selfie.',
         checks: { kyc: true, doc: true, proof: true },
+        proofs: [],
         createdAt: Date.now() - 3600000
     },
     {
@@ -1677,6 +1544,7 @@ let cases = JSON.parse(localStorage.getItem('escalation_cases')) || [
         status: 'waiting',
         notes: 'Waiting for updated proof of address.',
         checks: { kyc: true, doc: false, proof: false },
+        proofs: [],
         createdAt: Date.now() - 86400000
     }
 ];
@@ -1692,8 +1560,9 @@ let reviews = JSON.parse(localStorage.getItem('escalation_reviews')) || [
     }
 ];
 
-let currentFilter = 'all'; // 'all', 'ready', 'waiting', 'pending', 'escalated', 'rejected', 'deleted'
-let currentMode = 'cases'; // 'cases' or 'reviews'
+let currentFilter = 'all'; 
+let currentMode = 'cases'; 
+let currentUploadedProofs = [];
 
 // --- DOM ELEMENTS ---
 const displayName = document.getElementById('displayName');
@@ -1717,6 +1586,10 @@ const addCaseBtn = document.getElementById('addCaseBtn');
 const closeModalBtn = document.getElementById('closeModalBtn');
 const cancelModalBtn = document.getElementById('cancelModalBtn');
 
+const fileInput = document.getElementById('fileInput');
+const uploadArea = document.getElementById('uploadArea');
+const uploadPreviewGrid = document.getElementById('uploadPreviewGrid');
+
 const reviewsNavBtn = document.getElementById('reviewsNavBtn');
 const reviewsView = document.getElementById('reviewsView');
 const reviewModal = document.getElementById('reviewModal');
@@ -1736,6 +1609,7 @@ function init() {
     if (savedName) displayName.textContent = savedName;
 
     setupNavigation();
+    setupFileUpload();
     renderApp();
 }
 
@@ -1753,7 +1627,7 @@ function showToast(msg) {
     setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// --- NAVIGATION & VIEWS ---
+// --- NAVIGATION ---
 function setupNavigation() {
     document.querySelectorAll('.nav-item[data-filter]').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -1764,7 +1638,6 @@ function setupNavigation() {
             mainContainer.classList.remove('review-mode');
             currentFilter = btn.dataset.filter;
 
-            // NO STATUS FILTER EXCEPT DASHBOARD
             if (currentFilter === 'all') {
                 statusFilterSelect.style.display = 'block';
             } else {
@@ -1785,7 +1658,62 @@ function setupNavigation() {
     });
 }
 
-// --- RENDERING MAIN CASES & DASHBOARD ---
+// --- FILE UPLOAD HANDLING ---
+function setupFileUpload() {
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragging');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragging');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragging');
+        if (e.dataTransfer.files) {
+            handleFiles(e.dataTransfer.files);
+        }
+    });
+}
+
+function handleFiles(files) {
+    Array.from(files).forEach(file => {
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentUploadedProofs.push(e.target.result);
+                renderUploadPreviews();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+function renderUploadPreviews() {
+    uploadPreviewGrid.innerHTML = currentUploadedProofs.map((src, index) => `
+        <div class="upload-preview">
+            <img src="${src}" alt="Proof ${index + 1}">
+            <button type="button" class="remove-preview" onclick="removeProof(${index})">✕</button>
+        </div>
+    `).join('');
+
+    if (currentUploadedProofs.length > 0) {
+        document.getElementById('chkProof').checked = true;
+    }
+}
+
+window.removeProof = function(index) {
+    currentUploadedProofs.splice(index, 1);
+    renderUploadPreviews();
+};
+
+// --- RENDERING MAIN CASES ---
 function renderApp() {
     if (currentMode === 'reviews') return;
 
@@ -1797,15 +1725,12 @@ function renderApp() {
         if (c.status === 'deleted') return false;
 
         if (currentFilter === 'all') {
-            // Status filter on dashboard
             const sVal = statusFilterSelect.value;
             if (sVal !== 'all' && c.status !== sVal) return false;
         } else {
-            // Direct workflow stage
             if (c.status !== currentFilter) return false;
         }
 
-        // Search query
         const q = searchInput.value.toLowerCase().trim();
         if (q) {
             return c.userName.toLowerCase().includes(q) ||
@@ -1816,20 +1741,19 @@ function renderApp() {
         return true;
     });
 
-    // Update Headings
     const titles = {
         all: 'Dashboard - All Active Cases',
         ready: 'Ready to Escalate',
         waiting: 'Waiting for User',
         pending: 'Pending Escalation',
         escalated: 'Escalated Cases',
+        resolved: 'Resolved Cases',
         rejected: 'Rejected Cases',
         deleted: 'Deleted Items'
     };
     sectionTitle.textContent = titles[currentFilter] || 'Cases';
     caseCountText.textContent = `Showing ${filtered.length} cases`;
 
-    // Render Cards Grid
     if (filtered.length === 0) {
         casesGrid.innerHTML = `
             <div class="empty-state">
@@ -1847,6 +1771,7 @@ function renderApp() {
 function renderCaseCard(c) {
     const checksCount = Object.values(c.checks || {}).filter(Boolean).length;
     const isDeleted = c.status === 'deleted';
+    const proofsList = c.proofs || [];
 
     return `
         <div class="case-card status-${c.status}">
@@ -1873,9 +1798,22 @@ function renderCaseCard(c) {
             </div>
             ${c.notes ? `<p style="font-size: 12px; color: var(--muted); margin: 12px 0 0;">${escapeHtml(c.notes)}</p>` : ''}
 
+            ${proofsList.length > 0 ? `
+                <div class="evidence-section">
+                    <div class="evidence-title">Proof Attachments (${proofsList.length})</div>
+                    <div class="proof-preview">
+                        ${proofsList.map(src => `
+                            <a href="${src}" target="_blank" class="proof-thumb">
+                                <img src="${src}" alt="Proof Attachment">
+                            </a>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : ''}
+
             <div class="card-actions">
                 ${!isDeleted ? `
-                    <button class="card-btn primary-action ${c.status}" onclick="editCase('${c.id}')">Edit Case</button>
+                    <button class="card-btn primary-action" onclick="editCase('${c.id}')">Edit Case</button>
                     <button class="card-btn delete-btn" onclick="deleteCase('${c.id}')">🗑️</button>
                 ` : `
                     <button class="card-btn restore-btn" onclick="restoreCase('${c.id}')">Restore</button>
@@ -1886,7 +1824,7 @@ function renderCaseCard(c) {
 }
 
 function updateNavCounts() {
-    const counts = { ready: 0, waiting: 0, pending: 0, escalated: 0, rejected: 0, deleted: 0 };
+    const counts = { ready: 0, waiting: 0, pending: 0, escalated: 0, resolved: 0, rejected: 0, deleted: 0 };
     cases.forEach(c => {
         if (counts[c.status] !== undefined) counts[c.status]++;
     });
@@ -1895,6 +1833,7 @@ function updateNavCounts() {
     document.getElementById('waitingNavCount').textContent = counts.waiting;
     document.getElementById('pendingNavCount').textContent = counts.pending;
     document.getElementById('escalatedNavCount').textContent = counts.escalated;
+    document.getElementById('resolvedNavCount').textContent = counts.resolved;
     document.getElementById('rejectedNavCount').textContent = counts.rejected;
     document.getElementById('deletedNavCount').textContent = counts.deleted;
     document.getElementById('reviewsNavCount').textContent = reviews.length;
@@ -1907,6 +1846,7 @@ function updateStats() {
     document.getElementById('statWaiting').textContent = activeCases.filter(c => c.status === 'waiting').length;
     document.getElementById('statPending').textContent = activeCases.filter(c => c.status === 'pending').length;
     document.getElementById('statEscalated').textContent = activeCases.filter(c => c.status === 'escalated').length;
+    document.getElementById('statResolved').textContent = activeCases.filter(c => c.status === 'resolved').length;
     document.getElementById('statRejected').textContent = activeCases.filter(c => c.status === 'rejected').length;
 }
 
@@ -1914,6 +1854,8 @@ function updateStats() {
 addCaseBtn.addEventListener('click', () => {
     document.getElementById('caseId').value = '';
     caseForm.reset();
+    currentUploadedProofs = [];
+    renderUploadPreviews();
     document.getElementById('modalTitle').textContent = 'New Escalation Case';
     caseModal.classList.add('show');
 });
@@ -1936,6 +1878,7 @@ caseForm.addEventListener('submit', (e) => {
             doc: document.getElementById('chkDoc').checked,
             proof: document.getElementById('chkProof').checked
         },
+        proofs: [...currentUploadedProofs],
         createdAt: id ? (cases.find(c => c.id === id)?.createdAt || Date.now()) : Date.now()
     };
 
@@ -1965,6 +1908,9 @@ window.editCase = function(id) {
     document.getElementById('chkKyc').checked = !!c.checks?.kyc;
     document.getElementById('chkDoc').checked = !!c.checks?.doc;
     document.getElementById('chkProof').checked = !!c.checks?.proof;
+
+    currentUploadedProofs = c.proofs ? [...c.proofs] : [];
+    renderUploadPreviews();
 
     document.getElementById('modalTitle').textContent = 'Edit Escalation Case';
     caseModal.classList.add('show');
@@ -2009,7 +1955,6 @@ function renderReviews() {
         return true;
     });
 
-    // Review Stats
     document.getElementById('revStatTotal').textContent = reviews.length;
     document.getElementById('revStatPending').textContent = reviews.filter(r => r.status === 'Pending').length;
     document.getElementById('revStatSuccessful').textContent = reviews.filter(r => r.status === 'Successful').length;
