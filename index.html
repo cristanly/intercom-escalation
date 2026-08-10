@@ -1283,6 +1283,23 @@ button {
     stroke-linejoin:round;
 }
 
+
+.external-tool-link{
+    text-decoration:none;
+    color:inherit;
+    cursor:pointer;
+}
+.external-tool-link .nav-icon .icon-line{
+    width:19px;
+    height:19px;
+    display:block;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:1.8;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
 </style>
 </head>
 
@@ -1343,6 +1360,18 @@ button {
             Reviews Tracker
             <span class="nav-count count-ready" id="reviewsNavCount">0</span>
         </button>
+
+    
+        <a class="nav-item external-tool-link" href="https://card-rejection.vercel.app/" target="_blank" rel="noopener noreferrer">
+            <span class="nav-icon">
+                <svg class="icon-line" viewBox="0 0 24 24">
+                    <path d="M14 4h6v6"/>
+                    <path d="M13 11 20 4"/>
+                    <path d="M20 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h6"/>
+                </svg>
+            </span>
+            Rejection Generator
+        </a>
 
     </div>
 
