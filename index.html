@@ -495,6 +495,20 @@ button {
     white-space: nowrap;
 }
 
+.provider-tag {
+    display: inline-flex;
+    max-width: 100%;
+    color: var(--cyan);
+    background: rgba(104,221,255,.12);
+    border: 1px solid rgba(104,221,255,.25);
+    padding: 6px 9px;
+    border-radius: 8px;
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /* PROOF ATTACHMENTS PREVIEW IN CARD */
 .evidence-section {
     margin-top: 14px;
@@ -1289,7 +1303,7 @@ button {
     <div class="filter-bar">
         <div class="search-box">
             <span>🔍</span>
-            <input type="text" id="searchInput" placeholder="Search cases by email, issue, row, or ID...">
+            <input type="text" id="searchInput" placeholder="Search cases by email, issue, provider, row, or ID...">
         </div>
         <!-- Status Filter is ONLY visible in Dashboard mode -->
         <select class="filter-select" id="statusFilterSelect">
@@ -1363,6 +1377,7 @@ button {
             <table class="review-table">
                 <thead>
                     <tr>
+                        <th>Date</th>
                         <th>Platform</th>
                         <th>User Name</th>
                         <th>Intercom Link</th>
@@ -1392,7 +1407,11 @@ button {
         <form id="caseForm">
             <input type="hidden" id="caseId">
             <div class="form-grid">
-                <div class="form-group full">
+                <div class="form-group">
+                    <label>DATE</label>
+                    <input type="date" id="caseDate" required>
+                </div>
+                <div class="form-group">
                     <label>USER EMAIL</label>
                     <input type="email" id="userEmail" required placeholder="user@example.com">
                 </div>
@@ -1404,6 +1423,26 @@ button {
                     <label>ROW #</label>
                     <input type="text" id="rowNum" placeholder="e.g. 142">
                 </div>
+
+                <div class="form-group">
+                    <label>NETWORK PROVIDER</label>
+                    <select id="caseProvider" required>
+                        <option value="" disabled selected>Select provider...</option>
+                        <option value="AyeT">AyeT</option>
+                        <option value="RevU">RevU</option>
+                        <option value="Winklelab">Winklelab</option>
+                        <option value="Prodege">Prodege</option>
+                        <option value="WDigital">WDigital</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+                
+                <!-- CUSTOM PROVIDER INPUT (VISIBLE IF OTHERS IS SELECTED) -->
+                <div class="form-group" id="customProviderGroup" style="display: none;">
+                    <label>CUSTOM PROVIDER NAME</label>
+                    <input type="text" id="customProviderInput" placeholder="Enter custom provider name...">
+                </div>
+
                 <div class="form-group">
                     <label>ISSUE CATEGORY</label>
                     <select id="issueCategory" required>
@@ -1415,7 +1454,7 @@ button {
                         <option value="Incorrect Rewards">Incorrect Rewards</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group full">
                     <label>STATUS</label>
                     <select id="caseStatus">
                         <option value="ready">Ready to Escalate</option>
@@ -1498,6 +1537,10 @@ button {
             <input type="hidden" id="reviewId">
             <div class="review-form-grid">
                 <div class="review-form-group">
+                    <label>DATE</label>
+                    <input type="date" id="revDate" required>
+                </div>
+                <div class="review-form-group">
                     <label>PLATFORM</label>
                     <select id="revPlatform" required>
                         <option value="" disabled selected>Select platform...</option>
@@ -1506,7 +1549,7 @@ button {
                         <option value="Trustpilot">Trustpilot</option>
                     </select>
                 </div>
-                <div class="review-form-group">
+                <div class="review-form-group full">
                     <label>USER NAME</label>
                     <input type="text" id="revUserName" placeholder="Jane Doe" required>
                 </div>
@@ -1539,13 +1582,17 @@ button {
 <div class="toast" id="toast">Changes saved successfully!</div>
 
 <script>
+const todayStr = new Date().toISOString().split('T')[0];
+
 // --- INITIAL DATA & STORAGE HANDLERS ---
 let cases = JSON.parse(localStorage.getItem('escalation_cases')) || [
     {
         id: '1',
+        caseDate: todayStr,
         userEmail: 'alex.mercer@example.com',
         userId: 'USR-9021',
         rowNum: '102',
+        provider: 'AyeT',
         issueCategory: 'Card rejection',
         status: 'ready',
         notes: 'User submitted valid passport and selfie.',
@@ -1555,9 +1602,11 @@ let cases = JSON.parse(localStorage.getItem('escalation_cases')) || [
     },
     {
         id: '2',
+        caseDate: todayStr,
         userEmail: 'sarah.connor@example.com',
         userId: 'USR-3391',
         rowNum: '105',
+        provider: 'RevU',
         issueCategory: 'Missing postback',
         status: 'waiting',
         notes: 'Waiting for updated proof of address.',
@@ -1570,6 +1619,7 @@ let cases = JSON.parse(localStorage.getItem('escalation_cases')) || [
 let reviews = JSON.parse(localStorage.getItem('escalation_reviews')) || [
     {
         id: 'r1',
+        revDate: todayStr,
         platform: 'Trustpilot',
         userName: 'Alex Mercer',
         link: 'https://app.intercom.com/example',
@@ -1604,6 +1654,10 @@ const addCaseBtn = document.getElementById('addCaseBtn');
 const closeModalBtn = document.getElementById('closeModalBtn');
 const cancelModalBtn = document.getElementById('cancelModalBtn');
 
+const caseProviderSelect = document.getElementById('caseProvider');
+const customProviderGroup = document.getElementById('customProviderGroup');
+const customProviderInput = document.getElementById('customProviderInput');
+
 const fileInput = document.getElementById('fileInput');
 const uploadArea = document.getElementById('uploadArea');
 const uploadPreviewGrid = document.getElementById('uploadPreviewGrid');
@@ -1628,6 +1682,7 @@ function init() {
 
     setupNavigation();
     setupFileUpload();
+    setupProviderToggle();
     renderApp();
 }
 
@@ -1643,6 +1698,19 @@ function showToast(msg) {
     toast.textContent = msg;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// --- PROVIDER TOGGLE FOR OTHERS ---
+function setupProviderToggle() {
+    caseProviderSelect.addEventListener('change', () => {
+        if (caseProviderSelect.value === 'Others') {
+            customProviderGroup.style.display = 'flex';
+            customProviderInput.setAttribute('required', 'true');
+        } else {
+            customProviderGroup.style.display = 'none';
+            customProviderInput.removeAttribute('required');
+        }
+    });
 }
 
 // --- NAVIGATION ---
@@ -1754,6 +1822,7 @@ function renderApp() {
             return (c.userEmail && c.userEmail.toLowerCase().includes(q)) ||
                    (c.userId && c.userId.toLowerCase().includes(q)) ||
                    (c.rowNum && c.rowNum.toLowerCase().includes(q)) ||
+                   (c.provider && c.provider.toLowerCase().includes(q)) ||
                    (c.issueCategory && c.issueCategory.toLowerCase().includes(q));
         }
 
@@ -1797,7 +1866,7 @@ function renderCaseCard(c) {
         <div class="case-card status-${c.status}">
             <div class="card-top">
                 <span class="status-label">${c.status.toUpperCase()}</span>
-                <span class="case-age">${timeAgo(c.createdAt)}</span>
+                <span class="case-age">📅 ${c.caseDate || 'No Date'}</span>
             </div>
             <div class="user-info">
                 <div class="avatar">${avatarInitial}</div>
@@ -1808,12 +1877,12 @@ function renderCaseCard(c) {
             </div>
             <div class="case-info">
                 <div>
-                    <span class="info-label">Category</span>
-                    <span class="issue-tag">${escapeHtml(c.issueCategory)}</span>
+                    <span class="info-label">Provider</span>
+                    <span class="provider-tag">${escapeHtml(c.provider || 'N/A')}</span>
                 </div>
                 <div>
-                    <span class="info-label">Checklist</span>
-                    <span class="progress-text">${checksCount}/3 Completed</span>
+                    <span class="info-label">Category</span>
+                    <span class="issue-tag">${escapeHtml(c.issueCategory)}</span>
                 </div>
             </div>
             ${c.notes ? `<p style="font-size: 12px; color: var(--muted); margin: 12px 0 0;">${escapeHtml(c.notes)}</p>` : ''}
@@ -1874,6 +1943,8 @@ function updateStats() {
 addCaseBtn.addEventListener('click', () => {
     document.getElementById('caseId').value = '';
     caseForm.reset();
+    document.getElementById('caseDate').value = todayStr;
+    customProviderGroup.style.display = 'none';
     currentUploadedProofs = [];
     renderUploadPreviews();
     document.getElementById('modalTitle').textContent = 'New Escalation Case';
@@ -1886,11 +1957,19 @@ cancelModalBtn.addEventListener('click', () => caseModal.classList.remove('show'
 caseForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const id = document.getElementById('caseId').value;
+    
+    let selectedProvider = caseProviderSelect.value;
+    if (selectedProvider === 'Others') {
+        selectedProvider = customProviderInput.value.trim() || 'Others';
+    }
+
     const newCase = {
         id: id || Date.now().toString(),
+        caseDate: document.getElementById('caseDate').value || todayStr,
         userEmail: document.getElementById('userEmail').value,
         userId: document.getElementById('userId').value,
         rowNum: document.getElementById('rowNum').value,
+        provider: selectedProvider,
         issueCategory: document.getElementById('issueCategory').value,
         status: document.getElementById('caseStatus').value,
         notes: document.getElementById('caseNotes').value,
@@ -1921,9 +2000,22 @@ window.editCase = function(id) {
     if (!c) return;
 
     document.getElementById('caseId').value = c.id;
+    document.getElementById('caseDate').value = c.caseDate || todayStr;
     document.getElementById('userEmail').value = c.userEmail || '';
     document.getElementById('userId').value = c.userId || '';
     document.getElementById('rowNum').value = c.rowNum || '';
+    
+    const standardProviders = ['AyeT', 'RevU', 'Winklelab', 'Prodege', 'WDigital'];
+    if (standardProviders.includes(c.provider)) {
+        caseProviderSelect.value = c.provider;
+        customProviderGroup.style.display = 'none';
+        customProviderInput.value = '';
+    } else {
+        caseProviderSelect.value = 'Others';
+        customProviderGroup.style.display = 'flex';
+        customProviderInput.value = c.provider || '';
+    }
+
     document.getElementById('issueCategory').value = c.issueCategory || '';
     document.getElementById('caseStatus').value = c.status;
     document.getElementById('caseNotes').value = c.notes || '';
@@ -1972,6 +2064,7 @@ function renderReviews() {
         if (q) {
             return r.platform.toLowerCase().includes(q) ||
                    r.userName.toLowerCase().includes(q) ||
+                   (r.revDate && r.revDate.includes(q)) ||
                    r.link.toLowerCase().includes(q);
         }
         return true;
@@ -1985,12 +2078,13 @@ function renderReviews() {
     document.getElementById('revStatBonus').textContent = `$${totalBonus.toFixed(2)}`;
 
     if (filtered.length === 0) {
-        reviewTableBody.innerHTML = `<tr><td colspan="6" class="review-empty">No reviews found.</td></tr>`;
+        reviewTableBody.innerHTML = `<tr><td colspan="7" class="review-empty">No reviews found.</td></tr>`;
         return;
     }
 
     reviewTableBody.innerHTML = filtered.map(r => `
         <tr>
+            <td><small style="color:var(--muted); font-weight:700;">${escapeHtml(r.revDate || 'N/A')}</small></td>
             <td><strong>${escapeHtml(r.platform)}</strong></td>
             <td>${escapeHtml(r.userName)}</td>
             <td><a class="review-link" href="${escapeHtml(r.link)}" target="_blank" rel="noopener">${escapeHtml(r.link)}</a></td>
@@ -2009,6 +2103,7 @@ function renderReviews() {
 addReviewBtn.addEventListener('click', () => {
     document.getElementById('reviewId').value = '';
     reviewForm.reset();
+    document.getElementById('revDate').value = todayStr;
     document.getElementById('revModalTitle').textContent = 'Add Review';
     reviewModal.classList.add('show');
 });
@@ -2021,6 +2116,7 @@ reviewForm.addEventListener('submit', (e) => {
     const id = document.getElementById('reviewId').value;
     const newRev = {
         id: id || Date.now().toString(),
+        revDate: document.getElementById('revDate').value || todayStr,
         platform: document.getElementById('revPlatform').value,
         userName: document.getElementById('revUserName').value,
         link: document.getElementById('revLink').value,
@@ -2046,6 +2142,7 @@ window.editReview = function(id) {
     if (!r) return;
 
     document.getElementById('reviewId').value = r.id;
+    document.getElementById('revDate').value = r.revDate || todayStr;
     document.getElementById('revPlatform').value = r.platform;
     document.getElementById('revUserName').value = r.userName;
     document.getElementById('revLink').value = r.link;
@@ -2087,18 +2184,6 @@ saveNameBtn.addEventListener('click', () => {
 // --- HELPER FUNCTIONS ---
 function escapeHtml(str) {
     return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-}
-
-function timeAgo(timestamp) {
-    if (!timestamp) return 'Recently';
-    const seconds = Math.floor((Date.now() - timestamp) / 1000);
-    if (seconds < 60) return 'Just now';
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `${minutes}m ago`;
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours}h ago`;
-    const days = Math.floor(hours / 24);
-    return `${days}d ago`;
 }
 
 // Start App
