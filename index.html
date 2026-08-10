@@ -1289,7 +1289,7 @@ button {
     <div class="filter-bar">
         <div class="search-box">
             <span>🔍</span>
-            <input type="text" id="searchInput" placeholder="Search cases by name, issue, or ID...">
+            <input type="text" id="searchInput" placeholder="Search cases by email, issue, row, or ID...">
         </div>
         <!-- Status Filter is ONLY visible in Dashboard mode -->
         <select class="filter-select" id="statusFilterSelect">
@@ -1365,7 +1365,7 @@ button {
                     <tr>
                         <th>Platform</th>
                         <th>User Name</th>
-                        <th>Review Link</th>
+                        <th>Intercom Link</th>
                         <th>Status</th>
                         <th>Bonus ($)</th>
                         <th>Actions</th>
@@ -1392,17 +1392,28 @@ button {
         <form id="caseForm">
             <input type="hidden" id="caseId">
             <div class="form-grid">
-                <div class="form-group">
-                    <label>USER NAME</label>
-                    <input type="text" id="userName" required placeholder="John Doe">
+                <div class="form-group full">
+                    <label>USER EMAIL</label>
+                    <input type="email" id="userEmail" required placeholder="user@example.com">
                 </div>
                 <div class="form-group">
                     <label>USER ID / TICKET ID</label>
                     <input type="text" id="userId" required placeholder="USR-12345">
                 </div>
                 <div class="form-group">
+                    <label>ROW #</label>
+                    <input type="text" id="rowNum" placeholder="e.g. 142">
+                </div>
+                <div class="form-group">
                     <label>ISSUE CATEGORY</label>
-                    <input type="text" id="issueCategory" required placeholder="Account Rejection / KYC">
+                    <select id="issueCategory" required>
+                        <option value="" disabled selected>Select issue category...</option>
+                        <option value="Card rejection">Card rejection</option>
+                        <option value="Missing postback">Missing postback</option>
+                        <option value="No click recorded">No click recorded</option>
+                        <option value="Rewards Missing">Rewards Missing</option>
+                        <option value="Incorrect Rewards">Incorrect Rewards</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>STATUS</label>
@@ -1488,15 +1499,20 @@ button {
             <div class="review-form-grid">
                 <div class="review-form-group">
                     <label>PLATFORM</label>
-                    <input type="text" id="revPlatform" placeholder="Trustpilot, Google..." required>
+                    <select id="revPlatform" required>
+                        <option value="" disabled selected>Select platform...</option>
+                        <option value="Play Store">Play Store</option>
+                        <option value="App Store">App Store</option>
+                        <option value="Trustpilot">Trustpilot</option>
+                    </select>
                 </div>
                 <div class="review-form-group">
                     <label>USER NAME</label>
                     <input type="text" id="revUserName" placeholder="Jane Doe" required>
                 </div>
                 <div class="review-form-group full">
-                    <label>REVIEW LINK</label>
-                    <input type="url" id="revLink" placeholder="https://..." required>
+                    <label>INTERCOM LINK</label>
+                    <input type="url" id="revLink" placeholder="https://app.intercom.com/..." required>
                 </div>
                 <div class="review-form-group">
                     <label>STATUS</label>
@@ -1527,9 +1543,10 @@ button {
 let cases = JSON.parse(localStorage.getItem('escalation_cases')) || [
     {
         id: '1',
-        userName: 'Alex Mercer',
+        userEmail: 'alex.mercer@example.com',
         userId: 'USR-9021',
-        issueCategory: 'KYC Document Verification',
+        rowNum: '102',
+        issueCategory: 'Card rejection',
         status: 'ready',
         notes: 'User submitted valid passport and selfie.',
         checks: { kyc: true, doc: true, proof: true },
@@ -1538,9 +1555,10 @@ let cases = JSON.parse(localStorage.getItem('escalation_cases')) || [
     },
     {
         id: '2',
-        userName: 'Sarah Connor',
+        userEmail: 'sarah.connor@example.com',
         userId: 'USR-3391',
-        issueCategory: 'Card Rejection',
+        rowNum: '105',
+        issueCategory: 'Missing postback',
         status: 'waiting',
         notes: 'Waiting for updated proof of address.',
         checks: { kyc: true, doc: false, proof: false },
@@ -1554,7 +1572,7 @@ let reviews = JSON.parse(localStorage.getItem('escalation_reviews')) || [
         id: 'r1',
         platform: 'Trustpilot',
         userName: 'Alex Mercer',
-        link: 'https://trustpilot.com/review/example',
+        link: 'https://app.intercom.com/example',
         status: 'Successful',
         bonus: 5.00
     }
@@ -1733,9 +1751,10 @@ function renderApp() {
 
         const q = searchInput.value.toLowerCase().trim();
         if (q) {
-            return c.userName.toLowerCase().includes(q) ||
-                   c.userId.toLowerCase().includes(q) ||
-                   c.issueCategory.toLowerCase().includes(q);
+            return (c.userEmail && c.userEmail.toLowerCase().includes(q)) ||
+                   (c.userId && c.userId.toLowerCase().includes(q)) ||
+                   (c.rowNum && c.rowNum.toLowerCase().includes(q)) ||
+                   (c.issueCategory && c.issueCategory.toLowerCase().includes(q));
         }
 
         return true;
@@ -1772,6 +1791,7 @@ function renderCaseCard(c) {
     const checksCount = Object.values(c.checks || {}).filter(Boolean).length;
     const isDeleted = c.status === 'deleted';
     const proofsList = c.proofs || [];
+    const avatarInitial = (c.userEmail || 'U').charAt(0).toUpperCase();
 
     return `
         <div class="case-card status-${c.status}">
@@ -1780,10 +1800,10 @@ function renderCaseCard(c) {
                 <span class="case-age">${timeAgo(c.createdAt)}</span>
             </div>
             <div class="user-info">
-                <div class="avatar">${c.userName.charAt(0)}</div>
+                <div class="avatar">${avatarInitial}</div>
                 <div>
-                    <h4>${escapeHtml(c.userName)}</h4>
-                    <p>${escapeHtml(c.userId)}</p>
+                    <h4>${escapeHtml(c.userEmail || 'No Email')}</h4>
+                    <p>ID: ${escapeHtml(c.userId)}${c.rowNum ? ` | Row: #${escapeHtml(c.rowNum)}` : ''}</p>
                 </div>
             </div>
             <div class="case-info">
@@ -1868,8 +1888,9 @@ caseForm.addEventListener('submit', (e) => {
     const id = document.getElementById('caseId').value;
     const newCase = {
         id: id || Date.now().toString(),
-        userName: document.getElementById('userName').value,
+        userEmail: document.getElementById('userEmail').value,
         userId: document.getElementById('userId').value,
+        rowNum: document.getElementById('rowNum').value,
         issueCategory: document.getElementById('issueCategory').value,
         status: document.getElementById('caseStatus').value,
         notes: document.getElementById('caseNotes').value,
@@ -1900,9 +1921,10 @@ window.editCase = function(id) {
     if (!c) return;
 
     document.getElementById('caseId').value = c.id;
-    document.getElementById('userName').value = c.userName;
-    document.getElementById('userId').value = c.userId;
-    document.getElementById('issueCategory').value = c.issueCategory;
+    document.getElementById('userEmail').value = c.userEmail || '';
+    document.getElementById('userId').value = c.userId || '';
+    document.getElementById('rowNum').value = c.rowNum || '';
+    document.getElementById('issueCategory').value = c.issueCategory || '';
     document.getElementById('caseStatus').value = c.status;
     document.getElementById('caseNotes').value = c.notes || '';
     document.getElementById('chkKyc').checked = !!c.checks?.kyc;
