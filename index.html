@@ -1229,6 +1229,92 @@ button {
     .review-table-wrap { border: 1px solid #ccc !important; }
     .review-table th, .review-table td { color: #000 !important; border-bottom: 1px solid #ccc !important; }
 }
+
+/* VIEW TOGGLE STYLES - BAGONG DAGDAG */
+.active-view {
+    border-color: var(--purple) !important;
+    background: rgba(209,140,255,.15) !important;
+    color: var(--purple) !important;
+}
+
+/* LIST VIEW MODE TRANSFORMATION - BAGONG DAGDAG */
+.cases-grid.list-mode {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cases-grid.list-mode .case-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 12px 20px;
+    border-radius: 12px;
+}
+
+.cases-grid.list-mode .card-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    min-width: 110px;
+}
+
+.cases-grid.list-mode .user-info {
+    margin: 0;
+    flex: 2;
+}
+
+.cases-grid.list-mode .avatar {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+    border-radius: 10px;
+}
+
+.cases-grid.list-mode .case-info {
+    border: none;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+    flex: 1.5;
+}
+
+.cases-grid.list-mode .info-label {
+    display: none;
+}
+
+.cases-grid.list-mode .evidence-section {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.cases-grid.list-mode .evidence-title {
+    display: none;
+}
+
+.cases-grid.list-mode .card-actions {
+    margin-top: 0;
+    display: flex;
+    gap: 6px;
+}
+
+.cases-grid.list-mode .card-btn {
+    height: 34px;
+    padding: 0 12px;
+}
+
+@media (max-width: 850px) {
+    .cases-grid.list-mode .case-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    .cases-grid.list-mode .case-info {
+        justify-content: space-between;
+    }
+}
 </style>
 </head>
 
@@ -1426,8 +1512,15 @@ button {
 
     <!-- CASES SECTION -->
     <div class="section-heading">
-        <h3 id="sectionTitle">All Cases</h3>
-        <span class="case-count" id="caseCountText">Showing 0 cases</span>
+        <div>
+            <h3 id="sectionTitle">All Cases</h3>
+            <span class="case-count" id="caseCountText">Showing 0 cases</span>
+        </div>
+        <!-- VIEW TOGGLE BUTTONS -->
+        <div class="view-toggle-buttons" style="display: flex; gap: 8px;">
+            <button id="cardViewBtn" class="gear-btn active-view" title="Card View" style="width: 38px; height: 38px;">🎴</button>
+            <button id="listViewBtn" class="gear-btn" title="List View" style="width: 38px; height: 38px;">📝</button>
+        </div>
     </div>
 
     <div class="cases-grid" id="casesGrid">
@@ -1738,6 +1831,7 @@ let reviews = JSON.parse(localStorage.getItem('escalation_reviews')) || [
 let currentFilter = 'all'; 
 let currentMode = 'cases'; 
 let currentUploadedProofs = [];
+let currentView = localStorage.getItem('escalation_view_preference') || 'card';
 
 // --- DOM ELEMENTS ---
 const displayName = document.getElementById('displayName');
@@ -1788,6 +1882,9 @@ const exportPdfBtn = document.getElementById('exportPdfBtn');
 const importBtn = document.getElementById('importBtn');
 const importFileInput = document.getElementById('importFileInput');
 
+const cardViewBtn = document.getElementById('cardViewBtn');
+const listViewBtn = document.getElementById('listViewBtn');
+
 const toast = document.getElementById('toast');
 
 // --- APP INIT ---
@@ -1799,6 +1896,7 @@ function init() {
     setupFileUpload();
     setupProviderToggle();
     setupGearDropdown();
+    setupViewToggles();
     renderApp();
 }
 
@@ -1814,6 +1912,33 @@ function showToast(msg) {
     toast.textContent = msg;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// --- VIEW TOGGLE SETUP ---
+function setupViewToggles() {
+    cardViewBtn.addEventListener('click', () => {
+        currentView = 'card';
+        localStorage.setItem('escalation_view_preference', 'card');
+        updateViewToggleUI();
+    });
+
+    listViewBtn.addEventListener('click', () => {
+        currentView = 'list';
+        localStorage.setItem('escalation_view_preference', 'list');
+        updateViewToggleUI();
+    });
+}
+
+function updateViewToggleUI() {
+    if (currentView === 'list') {
+        listViewBtn.classList.add('active-view');
+        cardViewBtn.classList.remove('active-view');
+        casesGrid.classList.add('list-mode');
+    } else {
+        cardViewBtn.classList.add('active-view');
+        listViewBtn.classList.remove('active-view');
+        casesGrid.classList.remove('list-mode');
+    }
 }
 
 // --- GEAR DROPDOWN & IMPORT / EXPORT FORMAT INTEGRATIONS ---
@@ -2088,6 +2213,9 @@ function renderApp() {
     }
 
     casesGrid.innerHTML = filtered.map(c => renderCaseCard(c)).join('');
+    
+    // UI layout check tracker trigger
+    updateViewToggleUI();
 }
 
 function renderCaseCard(c) {
